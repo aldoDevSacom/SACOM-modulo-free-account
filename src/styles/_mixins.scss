@@ -1,0 +1,32 @@
+@use 'variables' as *;
+
+@mixin md {
+  @media (min-width: $bp-md) { @content; }
+}
+
+@mixin lg {
+  @media (min-width: $bp-lg) { @content; }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin input-base {
+  height: 32px;
+  width: 100%;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  background-color: $color-white;
+  padding: 0 $spacing-md;
+  font-family: $font-family;
+  font-size: 14px;
+  color: $color-text;
+  outline: none;
+
+  &:focus {
+    border-color: $color-primary;
+  }
+}

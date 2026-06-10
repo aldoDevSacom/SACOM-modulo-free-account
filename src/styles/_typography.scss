@@ -1,0 +1,26 @@
+@use 'variables' as *;
+
+body {
+  font-family: $font-family;
+  font-size: 16px;
+  color: $color-text;
+  background-color: $color-bg;
+}
+
+label {
+  font-weight: $font-weight-semibold;
+  font-size: 14px;
+  color: $color-text;
+}
+
+.error-msg {
+  color: $color-error;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.success-msg {
+  color: $color-success;
+  font-size: 14px;
+  margin-top: 8px;
+}
