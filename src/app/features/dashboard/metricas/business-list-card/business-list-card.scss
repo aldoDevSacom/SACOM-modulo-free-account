@@ -18,7 +18,7 @@
     &:hover { background: $color-bg; border-color: $color-primary; }
     &--add {
       border: 1.5px dashed $color-border; justify-content: flex-start; gap: 8px;
-      &:hover { border-color: $color-primary; background: #FFFBEB; }
+      &:hover { border-color: $color-primary; background: $color-primary-tint; }
     }
   }
   &__icon {

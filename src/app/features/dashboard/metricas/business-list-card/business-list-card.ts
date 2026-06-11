@@ -14,14 +14,11 @@ export class BusinessListCard {
   @Output() businessSelected = new EventEmitter<Business>();
   @Output() addRequested = new EventEmitter<void>();
 
-  // NOTE: metrics here are aggregated across all businesses (the mock service
-  // does not expose per-business breakdowns), so we show the per-business
-  // average as an approximation.
-  getBusinessMetrics(): { clicks: number; impressions: number } {
-    if (!this.metrics) return { clicks: 0, impressions: 0 };
-    const clicks = this.metrics.last30Days.reduce((s, d) => s + d.clicks, 0);
-    const impressions = this.metrics.last30Days.reduce((s, d) => s + d.impressions, 0);
-    const count = this.businesses.length || 1;
-    return { clicks: Math.round(clicks / count), impressions: Math.round(impressions / count) };
+  // NOTE: metrics are aggregated across all businesses (mock service has no
+  // per-business breakdown), so we show the per-business average as an approximation.
+  get avgClicks(): number {
+    if (!this.metrics) return 0;
+    const total = this.metrics.last30Days.reduce((s, d) => s + d.clicks, 0);
+    return Math.round(total / (this.businesses.length || 1));
   }
 }
