@@ -1,0 +1,9 @@
+<div class="mi-negocio">
+  <h2 class="mi-negocio__title">Mi negocio</h2>
+  <span class="success-msg" *ngIf="saved">¡Cambios guardados correctamente!</span>
+  <app-business-form
+    *ngIf="business"
+    [business]="business"
+    (saveEvent)="onSave($event)">
+  </app-business-form>
+</div>
