@@ -6,7 +6,7 @@
   <ng-container *ngIf="internalMode === 'detail' && business">
     <div class="drawer-header">
       <span class="drawer-title">Detalle del negocio</span>
-      <button class="drawer-close" (click)="closed.emit()">✕</button>
+      <button class="drawer-close" aria-label="Cerrar" (click)="closed.emit()">✕</button>
     </div>
     <div class="drawer-body">
       <div class="drawer-biz-hero">
@@ -59,10 +59,10 @@
   <ng-container *ngIf="internalMode === 'edit' && form">
     <div class="drawer-header">
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="drawer-back" (click)="switchToDetail()">←</button>
+        <button class="drawer-back" aria-label="Volver al detalle" (click)="switchToDetail()">←</button>
         <span class="drawer-title">Editar negocio</span>
       </div>
-      <button class="drawer-close" (click)="closed.emit()">✕</button>
+      <button class="drawer-close" aria-label="Cerrar" (click)="closed.emit()">✕</button>
     </div>
     <div class="drawer-body" [formGroup]="form">
       <div class="drawer-form-section">Datos de contacto</div>
@@ -109,6 +109,29 @@
         <label>Productos / servicios</label>
         <textarea formControlName="products" rows="3" class="drawer-textarea" placeholder="Hasta 25 palabras separadas por comas"></textarea>
       </div>
+      <div class="drawer-form-section">Horarios</div>
+      <div class="drawer-form-group">
+        <label class="drawer-checkbox-label">
+          <input type="checkbox" formControlName="allDay"> 24 horas
+        </label>
+      </div>
+      <ng-container *ngIf="!form.value.allDay">
+        <div class="drawer-hours-row">
+          <span>Lun–Vie:</span>
+          <input type="time" formControlName="wdOpen" class="drawer-time">
+          <input type="time" formControlName="wdClose" class="drawer-time">
+        </div>
+        <div class="drawer-hours-row">
+          <span>Sábado:</span>
+          <input type="time" formControlName="satOpen" class="drawer-time">
+          <input type="time" formControlName="satClose" class="drawer-time">
+        </div>
+        <div class="drawer-hours-row">
+          <span>Domingo:</span>
+          <input type="time" formControlName="sunOpen" class="drawer-time">
+          <input type="time" formControlName="sunClose" class="drawer-time">
+        </div>
+      </ng-container>
       <div class="drawer-form-group">
         <label>Logo</label>
         <label for="logo-edit" class="drawer-logo-drop">
@@ -128,7 +151,7 @@
   <ng-container *ngIf="internalMode === 'add' && form">
     <div class="drawer-header">
       <span class="drawer-title">Nuevo negocio</span>
-      <button class="drawer-close" (click)="closed.emit()">✕</button>
+      <button class="drawer-close" aria-label="Cerrar" (click)="closed.emit()">✕</button>
     </div>
     <div class="drawer-body" [formGroup]="form">
       <div class="drawer-steps">

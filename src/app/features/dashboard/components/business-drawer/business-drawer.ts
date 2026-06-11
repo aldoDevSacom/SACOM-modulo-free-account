@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnChanges, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Business, BusinessAddress } from '../../../../core/models/business.model';
 import { BusinessMockService } from '../../../../core/services/business.mock.service';
@@ -44,7 +44,7 @@ export class BusinessDrawer implements OnChanges {
     return ((this.totalClicks / t) * 100).toFixed(1) + '%';
   }
 
-  constructor(private fb: FormBuilder, private businessService: BusinessMockService) {}
+  constructor(private fb: FormBuilder, private businessService: BusinessMockService, private ngZone: NgZone) {}
 
   ngOnChanges(): void {
     this.internalMode = this.mode;
@@ -55,7 +55,6 @@ export class BusinessDrawer implements OnChanges {
       this.markerPosition = { lat: this.business.address.lat, lng: this.business.address.lng };
     }
     if (this.mode === 'add') {
-      this.business = null;
       this.buildForm();
       this.currentStep = 1;
       this.logoPreview = '';
@@ -122,18 +121,20 @@ export class BusinessDrawer implements OnChanges {
   private geocode(lat: number, lng: number): void {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-      if (status !== 'OK' || !results?.[0]) return;
-      const r = results[0];
-      const get = (type: string) => r.address_components.find(c => c.types.includes(type))?.long_name ?? '';
-      this.onAddressChange({
-        fullAddress: r.formatted_address,
-        street: get('route'),
-        exteriorNumber: get('street_number'),
-        colony: get('sublocality_level_1') || get('neighborhood'),
-        postalCode: get('postal_code'),
-        city: get('locality') || get('administrative_area_level_1'),
-        state: get('administrative_area_level_1'),
-        lat, lng
+      this.ngZone.run(() => {
+        if (status !== 'OK' || !results?.[0]) return;
+        const r = results[0];
+        const get = (type: string) => r.address_components.find(c => c.types.includes(type))?.long_name ?? '';
+        this.onAddressChange({
+          fullAddress: r.formatted_address,
+          street: get('route'),
+          exteriorNumber: get('street_number'),
+          colony: get('sublocality_level_1') || get('neighborhood'),
+          postalCode: get('postal_code'),
+          city: get('locality') || get('administrative_area_level_1'),
+          state: get('administrative_area_level_1'),
+          lat, lng
+        });
       });
     });
   }

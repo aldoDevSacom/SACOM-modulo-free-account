@@ -24,4 +24,38 @@ describe('BusinessDrawer', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  const fixtureBiz = () => ({
+    id: 'b1', userId: 'u1', businessName: 'Tacos', contactName: 'Juan',
+    contactEmail: 'j@t.com', contactPhone: '5551234567', categoryCode: 1,
+    category: 'Rest', website: '', publicPhone: '5559876543', products: 'tacos', logoUrl: '',
+    address: { fullAddress: 'X', street: 'S', exteriorNumber: '1', colony: 'C', postalCode: '06700', city: 'CDMX', state: 'CDMX', lat: 19.4, lng: -99.1 },
+    hours: { allDay: false, weekdays: { open: '08:00', close: '22:00' }, saturday: null, sunday: null }
+  } as any);
+
+  it('ngOnChanges in edit mode populates the form from the business', () => {
+    component.mode = 'edit';
+    component.business = fixtureBiz();
+    component.ngOnChanges();
+    expect(component.form.value.businessName).toBe('Tacos');
+    expect(component.form.value.contactEmail).toBe('j@t.com');
+  });
+
+  it('ngOnChanges in add mode produces a blank form', () => {
+    component.mode = 'add';
+    component.business = null;
+    component.ngOnChanges();
+    expect(component.form.value.businessName).toBe('');
+    expect(component.currentStep).toBe(1);
+  });
+
+  it('onSave does not call the service when the form is invalid', () => {
+    component.mode = 'add';
+    component.business = null;
+    component.ngOnChanges(); // blank form → invalid (required fields empty)
+    const svc = (component as any).businessService;
+    spyOn(svc, 'addBusiness').and.callThrough();
+    component.onSave();
+    expect(svc.addBusiness).not.toHaveBeenCalled();
+  });
 });
