@@ -3,15 +3,18 @@ $color-primary:        #FFD800;
 $color-primary-dark:   #E5C200;
 $color-bg:             #F4F4F4;
 $color-white:          #FFFFFF;
-$color-card-bg:        #FFFFFF;
+$color-card-bg:        #FFFFFF; // card surface — kept separate from $color-white for future theming
 $color-text:           #1A1A1A;
 $color-text-light:     #666666;
 $color-text-muted:     #999999;
 $color-border:         #E5E5E5;
 $color-btn-primary:    #1A1A1A;
+$color-btn-primary-hover: #2D2D2D;
 $color-error:          #DC2626;
-$color-danger:         #DC2626;
+$color-danger:         #DC2626; // destructive actions (distinct semantic from $color-error form validation)
 $color-success:        #16A34A;
+$color-success-bg:     #F0FDF4;
+$color-danger-bg:      #FEF2F2;
 
 // Tipografía
 $font-family: 'Inter', Arial, sans-serif;

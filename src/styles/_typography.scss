@@ -21,13 +21,13 @@ label {
 .kpi-value { font-size: 28px; font-weight: $font-weight-black; color: $color-text; line-height: 1; }
 
 // Badges
-.badge-up   { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: $font-weight-bold; background: #F0FDF4; color: $color-success; }
-.badge-down { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: $font-weight-bold; background: #FEF2F2; color: $color-danger; }
+.badge-up   { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: $font-weight-bold; background: $color-success-bg; color: $color-success; }
+.badge-down { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: $font-weight-bold; background: $color-danger-bg; color: $color-danger; }
 
 // Buttons
 .btn-primary {
   background: $color-btn-primary;
-  color: #fff;
+  color: $color-white;
   border: none;
   border-radius: $radius-full;
   padding: 10px 24px;
@@ -36,7 +36,7 @@ label {
   font-family: $font-family;
   cursor: pointer;
   transition: background-color 0.2s;
-  &:hover:not(:disabled) { background: #2D2D2D; }
+  &:hover:not(:disabled) { background: $color-btn-primary-hover; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
@@ -63,7 +63,7 @@ label {
   font-weight: $font-weight-bold;
   font-family: $font-family;
   cursor: pointer;
-  &:hover { background: #FEF2F2; }
+  &:hover { background: $color-danger-bg; }
 }
 
 .btn-accent {
