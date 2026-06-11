@@ -5,11 +5,22 @@
   border-radius: $radius-xl;
   padding: $spacing-md;
   box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  transition: $transition-base;
+
+  &:hover { box-shadow: 0 3px 10px rgba(0,0,0,.09); transform: translateY(-1px); }
 
   &--accent {
     background: $color-primary;
-    .kpi-card__label { color: rgba(0,0,0,.5); }
+    .kpi-card__label { color: rgba(0,0,0,.55); }
     .kpi-card__value { color: $color-text; }
+    .kpi-card__icon-wrap { background: rgba(0,0,0,.08); color: $color-text; }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
   }
 
   &__label {
@@ -18,7 +29,15 @@
     color: $color-text-muted;
     letter-spacing: .6px;
     text-transform: uppercase;
-    margin-bottom: 6px;
+  }
+
+  &__icon-wrap {
+    width: 24px; height: 24px;
+    background: $color-bg;
+    border-radius: $radius-md;
+    display: flex; align-items: center; justify-content: center;
+    color: $color-text-muted;
+    flex-shrink: 0;
   }
 
   &__value {
@@ -26,6 +45,13 @@
     font-weight: $font-weight-black;
     color: $color-text;
     line-height: 1;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+  }
+
+  &__badge-neutral {
+    display: inline-flex; align-items: center;
+    padding: 3px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: $font-weight-bold;
+    background: $color-bg; color: $color-text-muted;
   }
 }

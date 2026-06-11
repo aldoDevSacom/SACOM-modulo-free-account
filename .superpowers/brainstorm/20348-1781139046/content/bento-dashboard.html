@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SA Dashboard — Bento Grid</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F4F4F4; font-family: 'Inter', Arial, sans-serif; color: #1A1A1A; min-height: 100vh; }
+
+  /* TOP NAV */
+  .topnav {
+    background: #fff;
+    border-bottom: 1px solid #E5E5E5;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 80px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .logo-pin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: #FFD800;
+    border-radius: 50%;
+    font-size: 9px;
+  }
+  .nav-pills {
+    display: flex;
+    background: #F4F4F4;
+    border-radius: 20px;
+    padding: 3px;
+    gap: 2px;
+    margin: 0 auto;
+  }
+  .nav-pill {
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #666;
+    transition: all .2s;
+  }
+  .nav-pill.active {
+    background: #fff;
+    color: #1A1A1A;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  }
+  .topnav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .date-range {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #F4F4F4;
+    border: 1px solid #E5E5E5;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-add {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #1A1A1A;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .avatar {
+    width: 32px;
+    height: 32px;
+    background: #1A1A1A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFD800;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  /* LAYOUT */
+  .app-body {
+    display: flex;
+    height: calc(100vh - 56px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 60px;
+    background: #fff;
+    border-right: 1px solid #E5E5E5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .sidebar-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all .15s;
+    color: #999;
+  }
+  .sidebar-icon.active {
+    background: #FFD800;
+  }
+  .sidebar-icon:hover:not(.active) {
+    background: #F4F4F4;
+  }
+  .sidebar-spacer { flex: 1; }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 22px;
+  }
+
+  /* WELCOME */
+  .welcome {
+    margin-bottom: 18px;
+  }
+  .welcome h1 {
+    font-size: 24px;
+    font-weight: 900;
+    color: #1A1A1A;
+  }
+  .welcome h1 span {
+    font-weight: 400;
+    color: #999;
+  }
+  .welcome p {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* BENTO GRID */
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 14px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .card-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #999;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .card-sublabel {
+    font-size: 10px;
+    color: #bbb;
+    margin-bottom: 12px;
+  }
+  .card-expand {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 24px;
+    height: 24px;
+    background: #F4F4F4;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    color: #999;
+  }
+
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1A1A1A;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .badge-up { background: #F0FDF4; color: #16A34A; }
+  .badge-down { background: #FEF2F2; color: #DC2626; }
+
+  /* Card 1 — Clics */
+  .card-clics {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .clics-hero {
+    background: #FFD800;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 10px;
+  }
+  .clics-hero .label { font-size: 10px; font-weight: 700; color: rgba(0,0,0,.5); }
+  .clics-hero .value { font-size: 26px; font-weight: 900; color: #1A1A1A; }
+
+  /* Card 2 — Chart */
+  .card-chart {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .chart-toggle {
+    display: flex;
+    background: #F4F4F4;
+    border-radius: 10px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .chart-toggle span {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #999;
+  }
+  .chart-toggle span.active {
+    background: #1A1A1A;
+    color: #fff;
+  }
+  .bars-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 130px;
+    margin: 14px 0 6px;
+    padding: 0 4px;
+  }
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    gap: 2px;
+    position: relative;
+  }
+  .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: opacity .2s;
+  }
+  .bar-yellow { background: #FFD800; }
+  .bar-dark { background: #1A1A1A; opacity: .12; }
+  .bar-group:hover .bar { opacity: .8; }
+  .bar-tooltip {
+    position: absolute;
+    top: -22px;
+    background: #1A1A1A;
+    color: #FFD800;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+    display: none;
+  }
+  .bar-group:hover .bar-tooltip { display: block; }
+  .chart-xlabel {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+  }
+  .chart-xlabel span { font-size: 9px; color: #bbb; font-weight: 600; }
+
+  /* Card 3 — Negocios count */
+  .card-negocios {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .card-negocios-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .negocios-big {
+    font-size: 48px;
+    font-weight: 900;
+    color: #1A1A1A;
+    line-height: 1;
+    margin: 8px 0 4px;
+  }
+  .mini-avatars {
+    display: flex;
+    margin-top: 8px;
+  }
+  .mini-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-left: -6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    background: #F4F4F4;
+  }
+  .mini-avatar:first-child { margin-left: 0; }
+
+  /* Card 4 — Impresiones + mini chart */
+  .card-impresiones {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .sparkline {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 32px;
+    margin-top: 10px;
+  }
+  .spark-bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    background: #FFD800;
+    opacity: .6;
+  }
+  .spark-bar.peak { opacity: 1; background: #1A1A1A; }
+
+  /* Card 5 — Business list */
+  .card-businesses {
+    grid-column: 3;
+    grid-row: 2 / 4;
+  }
+  .biz-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F4F4F4;
+    cursor: pointer;
+    transition: background .15s;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  .biz-row:last-child { border-bottom: none; }
+  .biz-row:hover { background: #F4F4F4; }
+  .biz-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .biz-info { flex: 1; min-width: 0; }
+  .biz-name { font-size: 11px; font-weight: 800; color: #1A1A1A; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .biz-cat { font-size: 9px; color: #999; margin-top: 1px; }
+  .biz-meta { text-align: right; }
+  .biz-clicks { font-size: 12px; font-weight: 900; color: #1A1A1A; }
+  .biz-clicks-label { font-size: 9px; color: #999; }
+  .biz-trend { font-size: 9px; font-weight: 700; color: #16A34A; }
+
+  /* Card 6 — CTR */
+  .card-ctr {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .ctr-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .ctr-gauge {
+    width: 80px;
+    height: 80px;
+    position: relative;
+  }
+  .ctr-gauge svg { width: 100%; height: 100%; }
+  .ctr-gauge-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .ctr-gauge-value { font-size: 16px; font-weight: 900; color: #1A1A1A; line-height: 1; }
+  .ctr-gauge-sub { font-size: 8px; color: #999; font-weight: 600; }
+  .ctr-stats { display: flex; flex-direction: column; gap: 8px; }
+  .ctr-stat { display: flex; align-items: center; gap: 8px; }
+  .ctr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .ctr-stat-label { font-size: 10px; color: #666; flex: 1; }
+  .ctr-stat-value { font-size: 11px; font-weight: 800; color: #1A1A1A; }
+
+  /* Card 7 — Add business */
+  .card-add {
+    grid-column: 1;
+    grid-row: 3;
+    background: #1A1A1A;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  .card-add:hover { background: #2D2D2D; }
+  .card-add .add-title { font-size: 14px; font-weight: 900; color: #fff; line-height: 1.3; }
+  .card-add .add-sub { font-size: 10px; color: rgba(255,255,255,.5); margin-top: 4px; }
+  .card-add .add-btn {
+    background: #FFD800;
+    color: #1A1A1A;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    font-family: inherit;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="logo">SECCI<span class="logo-pin">📍</span>N AMARILLA</div>
+  <div class="nav-pills">
+    <div class="nav-pill active">Panel</div>
+    <div class="nav-pill">Métricas</div>
+    <div class="nav-pill">Negocios</div>
+    <div class="nav-pill">Seguridad</div>
+  </div>
+  <div class="topnav-right">
+    <div class="date-range">📅 Jun 1 – Jun 30, 2026 ▾</div>
+    <button class="btn-add">+ Agregar negocio</button>
+    <div class="avatar">JP</div>
+  </div>
+</div>
+
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-icon active">📊</div>
+    <div class="sidebar-icon">🏪</div>
+    <div class="sidebar-icon">📈</div>
+    <div class="sidebar-icon">🔔</div>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-icon">⚙️</div>
+    <div class="sidebar-icon">🔒</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- WELCOME -->
+    <div class="welcome">
+      <h1>Bienvenido, <span>Juan Pérez 📍</span></h1>
+      <p>Panel de control · Últimos 30 días · 3 negocios activos</p>
+    </div>
+
+    <!-- BENTO GRID -->
+    <div class="bento">
+
+      <!-- CARD 1: Clics totales -->
+      <div class="card card-clics">
+        <div class="card-expand">↗</div>
+        <div class="card-label">Clics totales</div>
+        <div class="card-sublabel">Todos los negocios</div>
+        <div class="clics-hero">
+          <div class="label">RENDIMIENTO</div>
+          <div class="value">8,541</div>
+          <div style="margin-top:4px;font-size:10px;font-weight:700;color:rgba(0,0,0,.6);">clics este mes</div>
+        </div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:6px;">
+          <span class="kpi-badge badge-up">↑ 8.3%</span>
+          <span style="font-size:10px;color:#999;">vs. mes anterior</span>
+        </div>
+      </div>
+
+      <!-- CARD 2: Chart (tall) -->
+      <div class="card card-chart">
+        <div class="card-expand">↗</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <div>
+            <div class="card-label">Engagement</div>
+            <div class="card-sublabel">Clics e impresiones · últimos 30 días</div>
+          </div>
+          <div class="chart-toggle">
+            <span>Semana</span>
+            <span class="active">Mes</span>
+          </div>
+        </div>
+        <!-- Peak label -->
+        <div style="text-align:right;padding-right:8px;">
+          <span style="background:#F4F4F4;font-size:10px;font-weight:700;color:#1A1A1A;padding:2px 8px;border-radius:8px;">pico: +17.8% <span style="color:#FFD800;">▲</span></span>
+        </div>
+        <div class="bars-wrap">
+          <div class="bar-group"><div class="bar-tooltip">1,240</div><div class="bar bar-dark" style="height:30%;"></div><div class="bar bar-yellow" style="height:35%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">1,850</div><div class="bar bar-dark" style="height:40%;"></div><div class="bar bar-yellow" style="height:45%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">1,540</div><div class="bar bar-dark" style="height:35%;"></div><div class="bar bar-yellow" style="height:40%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">2,940</div><div class="bar bar-dark" style="height:60%;"></div><div class="bar bar-yellow" style="height:75%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">2,150</div><div class="bar bar-dark" style="height:50%;"></div><div class="bar bar-yellow" style="height:55%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">3,200</div><div class="bar bar-dark" style="height:70%;"></div><div class="bar bar-yellow" style="height:85%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">2,740</div><div class="bar bar-dark" style="height:60%;"></div><div class="bar bar-yellow" style="height:65%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">3,541 🏆</div><div class="bar bar-dark" style="height:80%;"></div><div class="bar bar-yellow" style="height:100%;border-radius:8px 8px 0 0;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">2,980</div><div class="bar bar-dark" style="height:65%;"></div><div class="bar bar-yellow" style="height:72%;"></div></div>
+          <div class="bar-group"><div class="bar-tooltip">2,210</div><div class="bar bar-dark" style="height:50%;"></div><div class="bar bar-yellow" style="height:58%;"></div></div>
+        </div>
+        <div class="chart-xlabel">
+          <span>01 Jun</span><span>07</span><span>14</span><span>21</span><span>28</span><span>30 Jun</span>
+        </div>
+        <div style="display:flex;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid #F4F4F4;">
+          <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;background:#FFD800;border-radius:3px;"></div><span style="font-size:10px;color:#666;">Clics</span></div>
+          <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;background:#1A1A1A;border-radius:3px;opacity:.2;"></div><span style="font-size:10px;color:#666;">Impresiones</span></div>
+        </div>
+      </div>
+
+      <!-- CARD 3: Negocios count -->
+      <div class="card card-negocios">
+        <div class="card-expand">↗</div>
+        <div class="card-label">Mis negocios</div>
+        <div class="card-sublabel">Registros activos</div>
+        <div class="negocios-big">3</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">negocios activos en SA</div>
+        <div class="mini-avatars">
+          <div class="mini-avatar">🍕</div>
+          <div class="mini-avatar">💻</div>
+          <div class="mini-avatar">🌿</div>
+          <div style="width:28px;height:28px;border-radius:50%;border:2px solid #fff;margin-left:-6px;background:#FFD800;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#1A1A1A;">+</div>
+        </div>
+      </div>
+
+      <!-- CARD 4: Impresiones + sparkline -->
+      <div class="card card-impresiones">
+        <div class="card-expand">↗</div>
+        <div class="card-label">Impresiones</div>
+        <div class="card-sublabel">Vistas de tus listados</div>
+        <div class="kpi-value" style="font-size:24px;">42.7K</div>
+        <span class="kpi-badge badge-down">↓ 3%</span>
+        <div class="sparkline">
+          <div class="spark-bar" style="height:40%;"></div>
+          <div class="spark-bar" style="height:55%;"></div>
+          <div class="spark-bar" style="height:48%;"></div>
+          <div class="spark-bar" style="height:70%;"></div>
+          <div class="spark-bar" style="height:60%;"></div>
+          <div class="spark-bar peak" style="height:100%;"></div>
+          <div class="spark-bar" style="height:80%;"></div>
+          <div class="spark-bar" style="height:65%;"></div>
+        </div>
+      </div>
+
+      <!-- CARD 5: Business list (tall) -->
+      <div class="card card-businesses">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <div class="card-label">Mis negocios</div>
+            <div class="card-sublabel">Rendimiento individual</div>
+          </div>
+          <div class="card-expand" style="position:relative;top:auto;right:auto;">↗</div>
+        </div>
+        <div class="biz-row">
+          <div class="biz-icon" style="background:#FEF9C3;">🍕</div>
+          <div class="biz-info">
+            <div class="biz-name">Taquería El Buen Sabor</div>
+            <div class="biz-cat">Restaurantes · Roma Norte</div>
+            <div class="biz-trend">↑ 12.3%</div>
+          </div>
+          <div class="biz-meta">
+            <div class="biz-clicks">2,847</div>
+            <div class="biz-clicks-label">clics</div>
+          </div>
+        </div>
+        <div class="biz-row">
+          <div class="biz-icon" style="background:#EFF6FF;">💻</div>
+          <div class="biz-info">
+            <div class="biz-name">Tech Solutions MX</div>
+            <div class="biz-cat">Tecnología · Polanco</div>
+            <div class="biz-trend">↑ 9.3%</div>
+          </div>
+          <div class="biz-meta">
+            <div class="biz-clicks">3,210</div>
+            <div class="biz-clicks-label">clics</div>
+          </div>
+        </div>
+        <div class="biz-row">
+          <div class="biz-icon" style="background:#F0FDF4;">🌿</div>
+          <div class="biz-info">
+            <div class="biz-name">Floristería Primavera</div>
+            <div class="biz-cat">Flores · Coyoacán</div>
+            <div class="biz-trend" style="color:#DC2626;">↓ 2.1%</div>
+          </div>
+          <div class="biz-meta">
+            <div class="biz-clicks">2,484</div>
+            <div class="biz-clicks-label">clics</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 6: CTR gauge -->
+      <div class="card card-ctr">
+        <div class="card-expand">↗</div>
+        <div class="card-label">CTR Promedio</div>
+        <div class="card-sublabel">Clics / Impresiones</div>
+        <div class="ctr-inner">
+          <div class="ctr-gauge">
+            <svg viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="30" fill="none" stroke="#F4F4F4" stroke-width="8"/>
+              <circle cx="40" cy="40" r="30" fill="none" stroke="#FFD800" stroke-width="8"
+                stroke-dasharray="125.6" stroke-dashoffset="37.7" stroke-linecap="round"
+                transform="rotate(-90 40 40)"/>
+            </svg>
+            <div class="ctr-gauge-label">
+              <div class="ctr-gauge-value">20%</div>
+              <div class="ctr-gauge-sub">CTR</div>
+            </div>
+          </div>
+          <div class="ctr-stats">
+            <div class="ctr-stat">
+              <div class="ctr-dot" style="background:#FFD800;"></div>
+              <span class="ctr-stat-label">Taquería</span>
+              <span class="ctr-stat-value">20.1%</span>
+            </div>
+            <div class="ctr-stat">
+              <div class="ctr-dot" style="background:#1A1A1A;"></div>
+              <span class="ctr-stat-label">Tech Solutions</span>
+              <span class="ctr-stat-value">19.9%</span>
+            </div>
+            <div class="ctr-stat">
+              <div class="ctr-dot" style="background:#E5E5E5;border:1px solid #ccc;"></div>
+              <span class="ctr-stat-label">Floristería</span>
+              <span class="ctr-stat-value">20.0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 7: Add business (dark) -->
+      <div class="card card-add">
+        <div>
+          <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.8px;margin-bottom:6px;">NUEVO NEGOCIO</div>
+          <div class="add-title">¿Tienes otro negocio que registrar?</div>
+          <div class="add-sub">Agrégalo a tu perfil y empieza a recibir clientes desde todo México.</div>
+        </div>
+        <button class="add-btn">Registrar negocio →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

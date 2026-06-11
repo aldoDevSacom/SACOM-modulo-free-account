@@ -1,20 +1,51 @@
 <div class="metricas">
+  <!-- Welcome -->
   <div class="metricas__welcome">
     <div>
-      <h1 class="metricas__welcome-title">Bienvenido, <span>{{ userName }} 📍</span></h1>
+      <h1 class="metricas__welcome-title">
+        Bienvenido, <span class="metricas__welcome-name">{{ userName }}</span>
+        <ng-icon name="heroMapPin" size="18" class="metricas__pin-icon"></ng-icon>
+      </h1>
       <p class="metricas__welcome-sub">Panel de control · Últimos 30 días · {{ businesses.length }} negocio{{ businesses.length !== 1 ? 's' : '' }} activo{{ businesses.length !== 1 ? 's' : '' }}</p>
     </div>
-    <button class="btn-accent" (click)="openDrawerAdd()">+ Agregar negocio</button>
+    <button class="btn-primary btn-icon-label" (click)="openDrawerAdd()">
+      <ng-icon name="heroPlus" size="15"></ng-icon> Agregar negocio
+    </button>
   </div>
 
+  <!-- KPI row -->
   <div class="metricas__kpi-row">
-    <app-kpi-card label="Clics totales"  [value]="totalClicks"      badge="↑ 8%"  badgeType="up"></app-kpi-card>
-    <app-kpi-card label="Impresiones"    [value]="totalImpressions"  badge="↓ 3%"  badgeType="down"></app-kpi-card>
-    <app-kpi-card label="CTR promedio"   [value]="ctr"               badge="↑ 2%"  badgeType="up"></app-kpi-card>
-    <app-kpi-card label="Mis negocios"   [value]="businesses.length" [accent]="true"></app-kpi-card>
+    <app-kpi-card
+      label="Clics totales"
+      [value]="totalClicks"
+      icon="heroCursorArrowRays"
+      [badge]="clicksTrend"
+      [badgeType]="clicksTrendType">
+    </app-kpi-card>
+    <app-kpi-card
+      label="Impresiones"
+      [value]="totalImpressions"
+      icon="heroEye"
+      [badge]="impressionsTrend"
+      [badgeType]="impressionsTrendType">
+    </app-kpi-card>
+    <app-kpi-card
+      label="CTR promedio"
+      [value]="ctr"
+      icon="heroArrowTrendingUp"
+      badge="30 días"
+      badgeType="neutral">
+    </app-kpi-card>
+    <app-kpi-card
+      label="Mis negocios"
+      [value]="businesses.length"
+      icon="heroBriefcase"
+      [accent]="true">
+    </app-kpi-card>
   </div>
 
-  <div class="metricas__grid">
+  <!-- Main grid: chart + business list -->
+  <div class="metricas__grid" *ngIf="businesses.length > 0; else emptyState">
     <div class="metricas__chart-card">
       <div class="metricas__chart-header">
         <div>
@@ -31,8 +62,23 @@
       (addRequested)="openDrawerAdd()">
     </app-business-list-card>
   </div>
+
+  <!-- Estado vacío -->
+  <ng-template #emptyState>
+    <div class="metricas__empty">
+      <div class="metricas__empty-icon">
+        <ng-icon name="heroBriefcase" size="32"></ng-icon>
+      </div>
+      <h2 class="metricas__empty-title">Aún no tienes negocios registrados</h2>
+      <p class="metricas__empty-sub">Agrega tu primer negocio para empezar a ver métricas y estadísticas.</p>
+      <button class="btn-primary btn-icon-label" (click)="openDrawerAdd()">
+        <ng-icon name="heroPlus" size="15"></ng-icon> Agregar mi primer negocio
+      </button>
+    </div>
+  </ng-template>
 </div>
 
+<!-- Drawer -->
 <app-business-drawer
   *ngIf="drawerOpen"
   [mode]="drawerMode"

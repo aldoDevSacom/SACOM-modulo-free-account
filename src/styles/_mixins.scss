@@ -15,7 +15,8 @@
 }
 
 @mixin input-base {
-  height: 32px;
+  height: 44px;
+  min-height: 44px; // ergonomía móvil (mínimo recomendado por Apple/Google)
   width: 100%;
   border-radius: $radius-lg;
   border: 1px solid $color-border;
@@ -25,8 +26,8 @@
   font-size: 14px;
   color: $color-text;
   outline: none;
+  transition: $transition-fast;
 
-  &:focus {
-    border-color: $color-primary;
-  }
+  &:focus { border-color: $color-text; box-shadow: 0 0 0 3px rgba(0,0,0,.06); }
+  &::placeholder { color: $color-text-muted; }
 }

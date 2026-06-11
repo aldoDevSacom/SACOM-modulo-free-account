@@ -6,7 +6,59 @@
   min-height: 100vh;
   background: $color-bg;
 
-  &__body { display: flex; flex: 1; overflow: hidden; }
+  &__body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
   &__sidebar { flex-shrink: 0; }
-  &__content { flex: 1; overflow-y: auto; padding: $spacing-lg; }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-lg;
+
+    @media (max-width: #{$bp-md - 1px}) {
+      padding: $spacing-md;
+      padding-bottom: 80px; // espacio para nav inferior
+    }
+  }
+
+  // Nav inferior solo en mobile
+  &__bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: $color-white;
+    border-top: 1px solid $color-border;
+    z-index: 90;
+
+    @media (max-width: #{$bp-md - 1px}) {
+      display: flex;
+      align-items: stretch;
+    }
+  }
+
+  &__bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: $color-text-muted;
+    font-size: 10px;
+    font-weight: $font-weight-semibold;
+    transition: $transition-base;
+
+    &--active {
+      color: $color-text;
+      ng-icon { color: $color-primary; }
+    }
+
+    &:hover:not(&--active) { color: $color-text; background: $color-bg; }
+  }
 }

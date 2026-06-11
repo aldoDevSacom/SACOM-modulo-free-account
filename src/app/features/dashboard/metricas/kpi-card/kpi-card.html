@@ -1,7 +1,12 @@
 <div class="kpi-card" [class.kpi-card--accent]="accent">
-  <div class="kpi-card__label">{{ label }}</div>
+  <div class="kpi-card__header">
+    <div class="kpi-card__label">{{ label }}</div>
+    <div class="kpi-card__icon-wrap" *ngIf="icon">
+      <ng-icon [name]="icon" size="14"></ng-icon>
+    </div>
+  </div>
   <div class="kpi-card__value">{{ displayValue }}</div>
-  <span *ngIf="badge" [class]="badgeType === 'up' ? 'badge-up' : badgeType === 'down' ? 'badge-down' : ''">
+  <span *ngIf="badge" [class]="badgeType === 'up' ? 'badge-up' : badgeType === 'down' ? 'badge-down' : 'kpi-card__badge-neutral'">
     {{ badge }}
   </span>
 </div>

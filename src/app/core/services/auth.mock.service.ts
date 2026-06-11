@@ -2,6 +2,14 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { User } from '../models/user.model';
 
+export const DEMO_USER: User = {
+  id: 'usr-001',
+  email: 'demo@seccionamarilla.com',
+  contactName: 'Juan Pérez',
+  phone: '',
+  password: 'Demo1234'
+};
+
 @Injectable({ providedIn: 'root' })
 export class AuthMockService {
   private readonly KEY = 'sa_user';
@@ -31,6 +39,13 @@ export class AuthMockService {
   }
 
   login(email: string, password: string): Observable<boolean> {
+    // Credenciales demo siempre disponibles
+    if (email === DEMO_USER.email && password === DEMO_USER.password) {
+      sessionStorage.setItem(this.KEY, JSON.stringify(DEMO_USER));
+      this.currentUser.set(DEMO_USER);
+      return of(true);
+    }
+    // Usuario creado en sesión actual
     const user = this.load();
     if (user && user.email === email && user.password === password) {
       this.currentUser.set(user);

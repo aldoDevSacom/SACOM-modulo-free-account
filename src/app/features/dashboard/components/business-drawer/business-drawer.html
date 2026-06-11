@@ -1,16 +1,20 @@
-<div class="drawer-backdrop" (click)="closed.emit()"></div>
+<div class="drawer-backdrop" [class.drawer-backdrop--closing]="closing" (click)="requestClose()"></div>
 
-<div class="drawer-panel">
+<div class="drawer-panel" [class.drawer-panel--closing]="closing" role="dialog" aria-modal="true" aria-label="Gestión de negocio">
 
   <!-- MODO: DETAIL -->
   <ng-container *ngIf="internalMode === 'detail' && business">
     <div class="drawer-header">
       <span class="drawer-title">Detalle del negocio</span>
-      <button class="drawer-close" aria-label="Cerrar" (click)="closed.emit()">✕</button>
+      <button class="drawer-close" aria-label="Cerrar" (click)="requestClose()">
+        <ng-icon name="heroXMark" size="16"></ng-icon>
+      </button>
     </div>
     <div class="drawer-body">
       <div class="drawer-biz-hero">
-        <div class="drawer-biz-icon">🏪</div>
+        <div class="drawer-biz-icon">
+          <ng-icon name="heroBuildingStorefront" size="26"></ng-icon>
+        </div>
         <div>
           <div class="drawer-biz-name">{{ business.businessName }}</div>
           <div class="drawer-biz-cat">{{ business.category }} · {{ business.address.colony }}</div>
@@ -50,8 +54,12 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <button class="btn-primary" style="width:100%" (click)="switchToEdit()">✏️ Editar información</button>
-      <button class="btn-danger" style="width:100%;margin-top:8px" (click)="onDelete()">🗑 Eliminar negocio</button>
+      <button class="btn-primary btn-icon-label" style="width:100%" (click)="switchToEdit()">
+        <ng-icon name="heroPencilSquare" size="16"></ng-icon> Editar información
+      </button>
+      <button class="btn-danger btn-icon-label" style="width:100%;margin-top:8px" (click)="onDelete()">
+        <ng-icon name="heroTrash" size="16"></ng-icon> Eliminar negocio
+      </button>
     </div>
   </ng-container>
 
@@ -59,10 +67,14 @@
   <ng-container *ngIf="internalMode === 'edit' && form">
     <div class="drawer-header">
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="drawer-back" aria-label="Volver al detalle" (click)="switchToDetail()">←</button>
+        <button class="drawer-back" aria-label="Volver al detalle" (click)="switchToDetail()">
+          <ng-icon name="heroArrowLeft" size="15"></ng-icon>
+        </button>
         <span class="drawer-title">Editar negocio</span>
       </div>
-      <button class="drawer-close" aria-label="Cerrar" (click)="closed.emit()">✕</button>
+      <button class="drawer-close" aria-label="Cerrar" (click)="requestClose()">
+        <ng-icon name="heroXMark" size="16"></ng-icon>
+      </button>
     </div>
     <div class="drawer-body" [formGroup]="form">
       <div class="drawer-form-section">Datos de contacto</div>
@@ -136,13 +148,17 @@
         <label>Logo</label>
         <label for="logo-edit" class="drawer-logo-drop">
           <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo" style="height:100%;object-fit:contain;padding:4px;">
-          <span *ngIf="!logoPreview">📤 Subir logo</span>
+          <span *ngIf="!logoPreview" class="drawer-logo-placeholder">
+            <ng-icon name="heroArrowUpTray" size="18"></ng-icon> Subir logo
+          </span>
         </label>
         <input id="logo-edit" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none" (change)="onLogoChange($event)">
       </div>
     </div>
     <div class="drawer-footer">
-      <button class="btn-primary" style="width:100%" (click)="onSave()" [disabled]="form.invalid">💾 Guardar cambios</button>
+      <button class="btn-primary btn-icon-label" style="width:100%" (click)="onSave()" [disabled]="form.invalid">
+        <ng-icon name="heroCheckCircle" size="16"></ng-icon> Guardar cambios
+      </button>
       <button class="btn-secondary" style="width:100%;margin-top:8px" (click)="switchToDetail()">Cancelar</button>
     </div>
   </ng-container>
@@ -151,7 +167,9 @@
   <ng-container *ngIf="internalMode === 'add' && form">
     <div class="drawer-header">
       <span class="drawer-title">Nuevo negocio</span>
-      <button class="drawer-close" aria-label="Cerrar" (click)="closed.emit()">✕</button>
+      <button class="drawer-close" aria-label="Cerrar" (click)="requestClose()">
+        <ng-icon name="heroXMark" size="16"></ng-icon>
+      </button>
     </div>
     <div class="drawer-body" [formGroup]="form">
       <div class="drawer-steps">
@@ -214,7 +232,9 @@
           <label>Logo</label>
           <label for="logo-add" class="drawer-logo-drop">
             <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo" style="height:100%;object-fit:contain;padding:4px;">
-            <span *ngIf="!logoPreview">📤 Subir logo (.jpg, .png, .webp)</span>
+            <span *ngIf="!logoPreview" class="drawer-logo-placeholder">
+              <ng-icon name="heroArrowUpTray" size="18"></ng-icon> Subir logo (.jpg, .png, .webp)
+            </span>
           </label>
           <input id="logo-add" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none" (change)="onLogoChange($event)">
         </div>
@@ -243,9 +263,15 @@
       </ng-container>
     </div>
     <div class="drawer-footer">
-      <button *ngIf="currentStep < 3" class="btn-primary" style="width:100%" (click)="nextStep()">Siguiente →</button>
-      <button *ngIf="currentStep === 3" class="btn-primary" style="width:100%" (click)="onSave()" [disabled]="form.invalid">Registrar negocio →</button>
-      <button *ngIf="currentStep > 1" class="btn-secondary" style="width:100%;margin-top:8px" (click)="prevStep()">← Atrás</button>
+      <button *ngIf="currentStep < 3" class="btn-primary btn-icon-label" style="width:100%" (click)="nextStep()">
+        Siguiente <ng-icon name="heroArrowRight" size="15"></ng-icon>
+      </button>
+      <button *ngIf="currentStep === 3" class="btn-primary btn-icon-label" style="width:100%" (click)="onSave()" [disabled]="form.invalid">
+        <ng-icon name="heroCheckCircle" size="16"></ng-icon> Registrar negocio
+      </button>
+      <button *ngIf="currentStep > 1" class="btn-secondary btn-icon-label" style="width:100%;margin-top:8px" (click)="prevStep()">
+        <ng-icon name="heroArrowLeft" size="15"></ng-icon> Atrás
+      </button>
     </div>
   </ng-container>
 

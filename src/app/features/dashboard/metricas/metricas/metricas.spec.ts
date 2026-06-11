@@ -56,4 +56,20 @@ describe('Metricas', () => {
     component.closeDrawer();
     expect(component.drawerOpen).toBeFalse();
   });
+
+  it('onDrawerSaved closes the drawer and reloads data', () => {
+    component.drawerOpen = true;
+    const loadSpy = spyOn(component as any, 'loadData').and.callThrough();
+    component.onDrawerSaved({} as any);
+    expect(component.drawerOpen).toBeFalse();
+    expect(loadSpy).toHaveBeenCalled();
+  });
+
+  it('onDrawerDeleted closes the drawer and reloads data', () => {
+    component.drawerOpen = true;
+    const loadSpy = spyOn(component as any, 'loadData').and.callThrough();
+    component.onDrawerDeleted('some-id');
+    expect(component.drawerOpen).toBeFalse();
+    expect(loadSpy).toHaveBeenCalled();
+  });
 });

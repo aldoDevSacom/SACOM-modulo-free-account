@@ -1,13 +1,28 @@
 @use 'styles/variables' as *;
 
 :host { position: fixed; inset: 0; z-index: 1000; display: flex; justify-content: flex-end; }
-.drawer-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); backdrop-filter: blur(2px); }
-.drawer-panel {
-  position: relative; width: 380px; max-width: 90vw; height: 100%;
-  background: $color-white; display: flex; flex-direction: column;
-  box-shadow: -4px 0 24px rgba(0,0,0,.15); animation: slideIn .25s ease-out;
+
+.drawer-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.4); backdrop-filter: blur(2px);
+  animation: fadeIn .22s ease-out;
+  &--closing { animation: fadeOut .22s ease-in forwards; }
 }
-@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+.drawer-panel {
+  position: relative;
+  width: min(380px, 100vw);
+  height: 100%;
+  background: $color-white; display: flex; flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0,0,0,.15);
+  animation: slideIn .25s ease-out;
+  &--closing { animation: slideOut .22s ease-in forwards; }
+}
+
+@keyframes slideIn  { from { transform: translateX(100%); } to   { transform: translateX(0); } }
+@keyframes slideOut { from { transform: translateX(0); }    to   { transform: translateX(100%); } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut  { from { opacity: 1; } to { opacity: 0; } }
 .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid $color-border; flex-shrink: 0; }
 .drawer-title { font-size: 15px; font-weight: $font-weight-black; color: $color-text; }
 .drawer-close { width: 28px; height: 28px; background: $color-bg; border: none; border-radius: $radius-md; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; color: $color-text-light; &:hover { background: $color-border; } }
@@ -33,6 +48,7 @@
 .drawer-input { width: 100%; height: 34px; border: 1.5px solid $color-border; border-radius: $radius-md; padding: 0 10px; font-size: 12px; font-family: $font-family; outline: none; &:focus { border-color: $color-primary; } &[readonly] { background: $color-bg; color: $color-text-light; } }
 .drawer-textarea { width: 100%; border: 1.5px solid $color-border; border-radius: $radius-md; padding: 8px 10px; font-size: 12px; font-family: $font-family; resize: vertical; outline: none; &:focus { border-color: $color-primary; } }
 .drawer-logo-drop { display: flex; align-items: center; justify-content: center; height: 60px; border: 2px dashed $color-border; border-radius: $radius-md; cursor: pointer; font-size: 12px; font-weight: $font-weight-semibold; color: $color-text-muted; &:hover { border-color: $color-primary; color: $color-text; } }
+.drawer-logo-placeholder { display: inline-flex; align-items: center; gap: 6px; }
 .drawer-steps { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 .drawer-step { width: 24px; height: 24px; border-radius: 50%; background: $color-bg; color: $color-text-muted; font-size: 10px; font-weight: $font-weight-black; display: flex; align-items: center; justify-content: center; flex-shrink: 0; &--active { background: $color-primary; color: $color-text; } &--done { background: $color-text; color: $color-primary; } }
 .drawer-step-line { flex: 1; height: 2px; background: $color-border; &--done { background: $color-text; } }

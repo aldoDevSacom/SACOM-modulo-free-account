@@ -9,15 +9,32 @@
   align-items: center;
   padding: 16px 0;
   gap: 4px;
+  min-height: 100%;
+  flex-shrink: 0;
 
   &__item {
     width: 40px; height: 40px;
     display: flex; align-items: center; justify-content: center;
-    border-radius: $radius-md; cursor: pointer; font-size: 18px;
-    text-decoration: none; color: $color-text-muted; transition: all .15s;
-    &:hover { background: $color-bg; }
-    &--active { background: $color-primary; }
+    border-radius: $radius-md; cursor: pointer;
+    text-decoration: none; color: $color-text-muted;
+    transition: $transition-base;
+
+    &:hover { background: $color-bg; color: $color-text; }
+
+    &--active {
+      background: $color-primary;
+      color: $color-text;
+    }
+
     &--settings { color: $color-text-muted; }
   }
+
   &__spacer { flex: 1; }
+}
+
+// Ocultar sidebar en mobile, mostrar nav inferior
+@media (max-width: #{$bp-md - 1px}) {
+  .sidebar {
+    display: none;
+  }
 }

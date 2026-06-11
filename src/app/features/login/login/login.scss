@@ -3,24 +3,47 @@
 
 .login {
   min-height: 100vh;
-  background-color: $color-bg;
+  background: linear-gradient(160deg, #FFFBEB 0%, $color-bg 55%);
   @include flex-center;
   padding: $spacing-md;
 
   &__card {
     background: $color-white;
-    border-radius: $radius-lg;
-    padding: $spacing-xl;
+    border-radius: $radius-xl;
+    padding: 40px $spacing-xl;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
     text-align: center;
   }
 
+  &__logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: $spacing-md;
+  }
+
+  &__logo {
+    height: 28px;
+    width: auto;
+    display: block;
+  }
+
+  &__tagline {
+    font-size: 11px;
+    font-weight: $font-weight-semibold;
+    color: $color-text-muted;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: $spacing-xl;
+  }
+
   &__title {
-    font-size: 22px;
-    font-weight: $font-weight-bold;
+    font-size: 20px;
+    font-weight: $font-weight-black;
+    color: $color-text;
     margin-bottom: $spacing-lg;
+    text-align: left;
   }
 
   &__form { text-align: left; }
@@ -43,28 +66,77 @@
 
   &__btn {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border-radius: $radius-full;
     border: none;
-    background-color: $color-primary;
+    background-color: $color-text;
+    color: $color-white;
     font-weight: $font-weight-bold;
-    font-size: 14px;
+    font-size: 13px;
+    font-family: $font-family;
     margin-top: $spacing-sm;
+    cursor: pointer;
     transition: background-color 0.2s;
+    letter-spacing: 0.3px;
 
-    &:hover:not(:disabled) { background-color: $color-primary-dark; }
-    &:disabled { opacity: 0.5; cursor: not-allowed; }
+    &:hover:not(:disabled) { background-color: #2D2D2D; }
+    &:disabled { opacity: 0.45; cursor: not-allowed; }
   }
 
   &__register-link {
     margin-top: $spacing-lg;
-    font-size: 13px;
-    color: $color-text-light;
+    padding-top: $spacing-md;
+    border-top: 1px solid $color-border;
+    font-size: 12px;
+    color: $color-text-muted;
 
     a {
       color: $color-text;
-      font-weight: $font-weight-semibold;
-      text-decoration: underline;
+      font-weight: $font-weight-bold;
+      text-decoration: none;
+      &:hover { text-decoration: underline; }
     }
+  }
+
+  &__demo {
+    margin-top: $spacing-md;
+    padding: 12px 14px;
+    background: #FFFBEB;
+    border: 1.5px dashed #FFD800;
+    border-radius: $radius-lg;
+    text-align: center;
+  }
+
+  &__demo-label {
+    font-size: 10px;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: $color-text-muted;
+    margin-bottom: 6px;
+  }
+
+  &__demo-creds {
+    font-size: 12px;
+    font-weight: $font-weight-semibold;
+    color: $color-text;
+    font-family: monospace;
+    margin-bottom: 10px;
+  }
+
+  &__demo-sep { margin: 0 6px; color: $color-text-muted; }
+
+  &__demo-btn {
+    background: #FFD800;
+    color: $color-text;
+    border: none;
+    border-radius: $radius-full;
+    padding: 7px 18px;
+    font-size: 12px;
+    font-weight: $font-weight-bold;
+    font-family: $font-family;
+    cursor: pointer;
+    transition: background 0.15s;
+    &:hover { background: #E5C200; }
   }
 }

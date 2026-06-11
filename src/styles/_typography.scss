@@ -26,7 +26,7 @@ label {
 
 // Buttons
 .btn-primary {
-  background: $color-btn-primary;
+  background: $color-text; // negro como color primario de acción
   color: $color-white;
   border: none;
   border-radius: $radius-full;
@@ -35,9 +35,9 @@ label {
   font-weight: $font-weight-bold;
   font-family: $font-family;
   cursor: pointer;
-  transition: background-color 0.2s;
-  &:hover:not(:disabled) { background: $color-btn-primary-hover; }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  transition: $transition-base;
+  &:hover:not(:disabled) { background: #333; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
 .btn-secondary {
@@ -77,4 +77,20 @@ label {
   font-family: $font-family;
   cursor: pointer;
   &:hover { background: $color-primary-dark; }
+}
+
+// Botones con icono + texto alineados
+.btn-icon-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  ng-icon { flex-shrink: 0; }
+}
+
+// ng-icon inline (dentro de texto)
+ng-icon {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }

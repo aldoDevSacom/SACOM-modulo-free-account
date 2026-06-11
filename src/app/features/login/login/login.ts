@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthMockService } from '../../../core/services/auth.mock.service';
+import { AuthMockService, DEMO_USER } from '../../../core/services/auth.mock.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +13,9 @@ export class Login implements OnInit {
   form!: FormGroup;
   errorMsg = '';
   loading = false;
+
+  readonly demoEmail = DEMO_USER.email;
+  readonly demoPassword = DEMO_USER.password;
 
   constructor(
     private fb: FormBuilder,
@@ -29,6 +32,10 @@ export class Login implements OnInit {
 
   get email() { return this.form.get('email')!; }
   get password() { return this.form.get('password')!; }
+
+  fillDemo(): void {
+    this.form.setValue({ email: DEMO_USER.email, password: DEMO_USER.password });
+  }
 
   onSubmit(): void {
     if (this.form.invalid) return;

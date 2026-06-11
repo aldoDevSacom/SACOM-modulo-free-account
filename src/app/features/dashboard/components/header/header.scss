@@ -13,9 +13,12 @@
   z-index: 100;
   flex-shrink: 0;
 
-  &__logo { display: flex; align-items: center; gap: 1px; margin-right: auto; }
-  &__logo-text { font-size: 15px; font-weight: $font-weight-black; letter-spacing: -0.5px; }
-  &__logo-pin { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: $color-primary; border-radius: 50%; font-size: 8px; }
+  @media (max-width: #{$bp-md - 1px}) {
+    padding: 0 16px;
+  }
+
+  &__logo { display: flex; align-items: center; margin-right: auto; }
+  &__logo-svg { height: 28px; width: auto; display: block; }
 
   &__nav { display: flex; background: $color-bg; border-radius: 20px; padding: 3px; gap: 2px; position: absolute; left: 50%; transform: translateX(-50%); }
   &__nav-pill {
@@ -26,6 +29,7 @@
   }
 
   &__right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
-  &__avatar { width: 32px; height: 32px; background: $color-text; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: $color-primary; font-size: 12px; font-weight: $font-weight-black; }
-  &__logout { background: transparent; color: $color-text-light; border: 1px solid $color-border; border-radius: $radius-full; padding: 5px 12px; font-size: 11px; font-weight: $font-weight-semibold; cursor: pointer; font-family: $font-family; &:hover { background: $color-bg; color: $color-text; } }
+  &__avatar { width: 32px; height: 32px; background: $color-text; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: $color-primary; font-size: 12px; font-weight: $font-weight-black; flex-shrink: 0; }
+  &__username { font-size: 12px; font-weight: $font-weight-semibold; color: $color-text; @media (max-width: #{$bp-md - 1px}) { display: none; } }
+  &__logout { background: transparent; color: $color-text-light; border: 1px solid $color-border; border-radius: $radius-full; padding: 5px 12px; font-size: 11px; font-weight: $font-weight-semibold; cursor: pointer; font-family: $font-family; transition: $transition-base; &:hover { background: $color-bg; color: $color-text; } }
 }

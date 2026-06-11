@@ -14,11 +14,6 @@ const routes: Routes = [
           import('./metricas/metricas-module').then(m => m.MetricasModule)
       },
       {
-        path: 'mi-negocio',
-        loadChildren: () =>
-          import('./mi-negocio/mi-negocio-module').then(m => m.MiNegocioModule)
-      },
-      {
         path: 'seguridad',
         loadChildren: () =>
           import('./seguridad/seguridad-module').then(m => m.SeguridadModule)

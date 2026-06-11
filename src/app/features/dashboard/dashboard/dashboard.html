@@ -9,4 +9,15 @@
       <router-outlet></router-outlet>
     </main>
   </div>
+  <!-- Nav inferior solo en mobile -->
+  <nav class="dashboard__bottom-nav">
+    <a routerLink="/dashboard/metricas" routerLinkActive="dashboard__bottom-nav-item--active" class="dashboard__bottom-nav-item" title="Panel">
+      <ng-icon name="heroChartBar" size="22"></ng-icon>
+      <span>Panel</span>
+    </a>
+    <a routerLink="/dashboard/seguridad" routerLinkActive="dashboard__bottom-nav-item--active" class="dashboard__bottom-nav-item" title="Seguridad">
+      <ng-icon name="heroLockClosed" size="22"></ng-icon>
+      <span>Seguridad</span>
+    </a>
+  </nav>
 </div>

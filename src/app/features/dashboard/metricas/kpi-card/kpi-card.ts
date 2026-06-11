@@ -16,6 +16,7 @@ export class KpiCard {
   @Input() badge = '';
   @Input() badgeType: 'up' | 'down' | 'neutral' = 'neutral';
   @Input() accent = false;
+  @Input() icon = '';
 
   get displayValue(): string {
     return typeof this.value === 'number' ? (this.decimal.transform(this.value) ?? '') : String(this.value);

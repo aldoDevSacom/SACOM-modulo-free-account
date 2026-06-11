@@ -7,7 +7,7 @@ $color-white:          #FFFFFF;
 $color-card-bg:        #FFFFFF; // card surface — kept separate from $color-white for future theming
 $color-text:           #1A1A1A;
 $color-text-light:     #666666;
-$color-text-muted:     #999999;
+$color-text-muted:     #767676; // mínimo WCAG AA 4.54:1 sobre blanco
 $color-border:         #E5E5E5;
 $color-btn-primary:    #1A1A1A;
 $color-btn-primary-hover: #2D2D2D;
@@ -37,6 +37,10 @@ $spacing-sm: 8px;
 $spacing-md: 16px;
 $spacing-lg: 24px;
 $spacing-xl: 32px;
+
+// Transiciones
+$transition-base: all .15s ease;
+$transition-fast: all .1s ease;
 
 // Border radius
 $radius-sm:   4px;

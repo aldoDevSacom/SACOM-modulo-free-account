@@ -22,11 +22,19 @@ export class BusinessDrawer implements OnChanges {
   form!: FormGroup;
   logoPreview = '';
   currentStep = 1;
+  closing = false; // controla animación de cierre
 
   mapCenter: google.maps.LatLngLiteral = { lat: 19.4195, lng: -99.1674 };
   markerPosition: google.maps.LatLngLiteral = { lat: 19.4195, lng: -99.1674 };
   zoom = 14;
   mapOptions: google.maps.MapOptions = { clickableIcons: false };
+
+  // Campos requeridos por paso para validación
+  private readonly stepFields: Record<number, string[]> = {
+    1: ['contactName', 'contactEmail', 'contactPhone'],
+    2: ['businessName', 'category', 'publicPhone', 'products'],
+    3: []
+  };
 
   get totalClicks(): number {
     if (!this.metrics) return 0;
@@ -44,10 +52,16 @@ export class BusinessDrawer implements OnChanges {
     return ((this.totalClicks / t) * 100).toFixed(1) + '%';
   }
 
+  get currentStepInvalid(): boolean {
+    if (!this.form) return false;
+    return this.stepFields[this.currentStep]?.some(f => this.form.get(f)?.invalid) ?? false;
+  }
+
   constructor(private fb: FormBuilder, private businessService: BusinessMockService, private ngZone: NgZone) {}
 
   ngOnChanges(): void {
     this.internalMode = this.mode;
+    this.closing = false;
     if (this.mode === 'edit' && this.business) {
       this.buildForm();
       this.logoPreview = this.business.logoUrl;
@@ -64,34 +78,49 @@ export class BusinessDrawer implements OnChanges {
   private buildForm(): void {
     const b = this.business;
     this.form = this.fb.group({
-      contactName:  [b?.contactName  ?? '', Validators.required],
-      contactEmail: [b?.contactEmail ?? '', [Validators.required, Validators.email]],
-      contactPhone: [b?.contactPhone ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      businessName: [b?.businessName ?? '', Validators.required],
-      category:     [b?.category     ?? '', Validators.required],
-      website:      [b?.website      ?? ''],
-      publicPhone:  [b?.publicPhone  ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      products:     [b?.products     ?? '', Validators.required],
-      fullAddress:  [b?.address.fullAddress ?? ''],
-      street:       [b?.address.street      ?? ''],
+      contactName:   [b?.contactName       ?? '', Validators.required],
+      contactEmail:  [b?.contactEmail      ?? '', [Validators.required, Validators.email]],
+      contactPhone:  [b?.contactPhone      ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      businessName:  [b?.businessName      ?? '', Validators.required],
+      category:      [b?.category          ?? '', Validators.required],
+      website:       [b?.website           ?? ''],
+      publicPhone:   [b?.publicPhone       ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      products:      [b?.products          ?? '', Validators.required],
+      fullAddress:   [b?.address.fullAddress    ?? ''],
+      street:        [b?.address.street         ?? ''],
       exteriorNumber:[b?.address.exteriorNumber ?? ''],
-      colony:       [b?.address.colony      ?? ''],
-      postalCode:   [b?.address.postalCode  ?? ''],
-      city:         [b?.address.city        ?? ''],
-      state:        [b?.address.state       ?? ''],
-      lat:          [b?.address.lat         ?? 19.4195],
-      lng:          [b?.address.lng         ?? -99.1674],
-      allDay:       [b?.hours.allDay        ?? false],
-      wdOpen:       [b?.hours.weekdays?.open  ?? ''],
-      wdClose:      [b?.hours.weekdays?.close ?? ''],
-      satOpen:      [b?.hours.saturday?.open  ?? ''],
-      satClose:     [b?.hours.saturday?.close ?? ''],
-      sunOpen:      [b?.hours.sunday?.open    ?? ''],
-      sunClose:     [b?.hours.sunday?.close   ?? '']
+      colony:        [b?.address.colony         ?? ''],
+      postalCode:    [b?.address.postalCode      ?? ''],
+      city:          [b?.address.city            ?? ''],
+      state:         [b?.address.state           ?? ''],
+      lat:           [b?.address.lat             ?? 19.4195],
+      lng:           [b?.address.lng             ?? -99.1674],
+      allDay:        [b?.hours.allDay            ?? false],
+      wdOpen:        [b?.hours.weekdays?.open    ?? ''],
+      wdClose:       [b?.hours.weekdays?.close   ?? ''],
+      satOpen:       [b?.hours.saturday?.open    ?? ''],
+      satClose:      [b?.hours.saturday?.close   ?? ''],
+      sunOpen:       [b?.hours.sunday?.open      ?? ''],
+      sunClose:      [b?.hours.sunday?.close     ?? '']
     });
   }
 
-  switchToEdit(): void { this.internalMode = 'edit'; this.buildForm(); if (this.business) { this.logoPreview = this.business.logoUrl; this.mapCenter = { lat: this.business.address.lat, lng: this.business.address.lng }; this.markerPosition = { ...this.mapCenter }; } }
+  // Cierre con animación
+  requestClose(): void {
+    this.closing = true;
+    setTimeout(() => this.closed.emit(), 220);
+  }
+
+  switchToEdit(): void {
+    this.internalMode = 'edit';
+    this.buildForm();
+    if (this.business) {
+      this.logoPreview = this.business.logoUrl;
+      this.mapCenter = { lat: this.business.address.lat, lng: this.business.address.lng };
+      this.markerPosition = { ...this.mapCenter };
+    }
+  }
+
   switchToDetail(): void { this.internalMode = 'detail'; }
 
   onLogoChange(event: Event): void {
@@ -139,6 +168,17 @@ export class BusinessDrawer implements OnChanges {
     });
   }
 
+  nextStep(): void {
+    if (this.currentStepInvalid) {
+      // Marcar campos del paso actual como touched para mostrar errores
+      this.stepFields[this.currentStep]?.forEach(f => this.form.get(f)?.markAsTouched());
+      return;
+    }
+    if (this.currentStep < 3) this.currentStep++;
+  }
+
+  prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
+
   onSave(): void {
     if (!this.form || this.form.invalid) return;
     const v = this.form.value;
@@ -147,13 +187,17 @@ export class BusinessDrawer implements OnChanges {
       businessName: v.businessName, category: v.category, website: v.website,
       publicPhone: v.publicPhone, products: v.products, logoUrl: this.logoPreview,
       categoryCode: this.business?.categoryCode ?? 0,
-      address: { fullAddress: v.fullAddress, street: v.street, exteriorNumber: v.exteriorNumber,
+      address: {
+        fullAddress: v.fullAddress, street: v.street, exteriorNumber: v.exteriorNumber,
         colony: v.colony, postalCode: v.postalCode, city: v.city, state: v.state,
-        lat: v.lat, lng: v.lng },
-      hours: { allDay: v.allDay,
+        lat: v.lat, lng: v.lng
+      },
+      hours: {
+        allDay: v.allDay,
         weekdays: v.allDay ? null : { open: v.wdOpen, close: v.wdClose },
         saturday: v.allDay ? null : { open: v.satOpen, close: v.satClose },
-        sunday: v.allDay ? null : { open: v.sunOpen, close: v.sunClose } }
+        sunday:   v.allDay ? null : { open: v.sunOpen, close: v.sunClose }
+      }
     };
     if (this.internalMode === 'edit' && this.business) {
       this.businessService.updateBusiness(this.business.id, data).subscribe(b => this.saved.emit(b));
@@ -169,7 +213,4 @@ export class BusinessDrawer implements OnChanges {
       this.deleted.emit(this.business!.id);
     });
   }
-
-  nextStep(): void { if (this.currentStep < 3) this.currentStep++; }
-  prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
 }

@@ -1,0 +1,110 @@
+<h2>¿Cómo aparece el detalle del negocio al hacer clic?</h2>
+<p class="subtitle">El usuario ve los datos guardados + botones "Editar" y "Eliminar"</p>
+
+<div class="split">
+
+  <!-- OPCIÓN A: Panel lateral (drawer) -->
+  <div class="mockup">
+    <div class="mockup-header">Opción A — Panel lateral (drawer)</div>
+    <div class="mockup-body" style="background:#F4F4F4;font-family:Inter,Arial,sans-serif;display:flex;height:340px;overflow:hidden;position:relative;">
+      <!-- Main content dimmed -->
+      <div style="flex:1;padding:16px;opacity:.35;">
+        <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;height:60px;"></div>
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:10px;">
+          <div style="background:#fff;border-radius:10px;height:140px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:#fff;border-radius:10px;padding:10px;flex:1;border:2px solid #FFD800;"></div>
+            <div style="background:#fff;border-radius:10px;padding:10px;flex:1;"></div>
+            <div style="background:#fff;border-radius:10px;padding:10px;flex:1;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Drawer -->
+      <div style="width:260px;background:#fff;box-shadow:-4px 0 20px rgba(0,0,0,.12);padding:16px;display:flex;flex-direction:column;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <span style="font-size:13px;font-weight:900;color:#1A1A1A;">Detalle del negocio</span>
+          <span style="color:#999;font-size:16px;cursor:pointer;">✕</span>
+        </div>
+        <!-- Logo + nombre -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #F4F4F4;">
+          <div style="width:44px;height:44px;background:#FEF9C3;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;">🍕</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#1A1A1A;">Taquería El Buen Sabor</div>
+            <div style="font-size:10px;color:#999;">Restaurantes</div>
+          </div>
+        </div>
+        <!-- Datos -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;flex:1;">
+          <div><div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;">TELÉFONO</div><div style="font-size:12px;color:#1A1A1A;font-weight:600;">(55) 5123-4567</div></div>
+          <div><div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;">SITIO WEB</div><div style="font-size:12px;color:#1A1A1A;font-weight:600;">www.buensabor.com</div></div>
+          <div><div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;">DIRECCIÓN</div><div style="font-size:12px;color:#1A1A1A;font-weight:600;">Av. Insurgentes Sur 123, Roma Norte</div></div>
+          <div><div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;">HORARIO</div><div style="font-size:12px;color:#1A1A1A;font-weight:600;">Lun–Vie 8:00–22:00</div></div>
+          <div><div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;">PRODUCTOS</div><div style="font-size:12px;color:#1A1A1A;font-weight:600;">tacos, quesadillas, tortas...</div></div>
+        </div>
+        <!-- CTAs -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button style="background:#1A1A1A;color:#fff;border:none;border-radius:20px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">Editar información →</button>
+          <button style="background:#fff;color:#DC2626;border:1.5px solid #DC2626;border-radius:20px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">Eliminar negocio</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:8px 0;font-size:11px;color:#94A3B8;">Se desliza desde la derecha. El fondo queda visible pero oscurecido.</div>
+  </div>
+
+  <!-- OPCIÓN B: Página propia -->
+  <div class="mockup">
+    <div class="mockup-header">Opción B — Página de detalle (/dashboard/negocios/:id)</div>
+    <div class="mockup-body" style="background:#F4F4F4;font-family:Inter,Arial,sans-serif;padding:16px;height:340px;overflow:hidden;">
+      <!-- Breadcrumb -->
+      <div style="font-size:10px;color:#999;margin-bottom:12px;">Panel → <span style="color:#1A1A1A;font-weight:600;">Taquería El Buen Sabor</span></div>
+      <!-- Hero card -->
+      <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:52px;height:52px;background:#FEF9C3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;">🍕</div>
+          <div>
+            <div style="font-size:16px;font-weight:900;color:#1A1A1A;">Taquería El Buen Sabor</div>
+            <div style="font-size:11px;color:#999;margin-top:1px;">Restaurantes · Roma Norte, CDMX</div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px;">
+            <button style="background:#1A1A1A;color:#fff;border:none;border-radius:16px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;">Editar →</button>
+            <button style="background:#fff;color:#DC2626;border:1.5px solid #DC2626;border-radius:16px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;">Eliminar</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div style="background:#F4F4F4;border-radius:8px;padding:8px;"><div style="font-size:9px;color:#999;font-weight:700;">TELÉFONO</div><div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-top:2px;">(55) 5123-4567</div></div>
+          <div style="background:#F4F4F4;border-radius:8px;padding:8px;"><div style="font-size:9px;color:#999;font-weight:700;">SITIO WEB</div><div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-top:2px;">www.buensabor.com</div></div>
+          <div style="background:#F4F4F4;border-radius:8px;padding:8px;"><div style="font-size:9px;color:#999;font-weight:700;">HORARIO</div><div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-top:2px;">Lun–Vie 8–22h</div></div>
+        </div>
+      </div>
+      <!-- Address + products -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:#fff;border-radius:10px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;margin-bottom:6px;">DIRECCIÓN</div>
+          <div style="font-size:11px;color:#1A1A1A;font-weight:600;line-height:1.4;">Av. Insurgentes Sur 123<br>Roma Norte, 06700 CDMX</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <div style="font-size:9px;font-weight:700;color:#999;letter-spacing:.5px;margin-bottom:6px;">PRODUCTOS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span style="background:#F4F4F4;color:#1A1A1A;font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;">tacos</span>
+            <span style="background:#F4F4F4;color:#1A1A1A;font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;">quesadillas</span>
+            <span style="background:#F4F4F4;color:#1A1A1A;font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;">tortas</span>
+            <span style="background:#FFD800;color:#1A1A1A;font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;">+3 más</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:8px 0;font-size:11px;color:#94A3B8;">Ruta propia, breadcrumb de regreso. Los CTAs Editar y Eliminar están en el hero.</div>
+  </div>
+
+</div>
+
+<div class="options" style="margin-top:20px;">
+  <div class="option" data-choice="A" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Drawer lateral</h3><p>Sin salir del dashboard principal. Rápido, contextual.</p></div>
+  </div>
+  <div class="option" data-choice="B" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Página de detalle</h3><p>Ruta propia /negocios/:id. Más espacio, más datos visibles.</p></div>
+  </div>
+</div>

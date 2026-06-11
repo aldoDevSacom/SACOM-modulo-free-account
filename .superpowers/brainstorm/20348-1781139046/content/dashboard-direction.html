@@ -1,0 +1,101 @@
+<h2>¿Qué dirección visual quieres para el dashboard?</h2>
+<p class="subtitle">Elige el estilo general que mejor representa la identidad que buscas</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="corporate" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0F172A;padding:16px;font-family:Inter,sans-serif;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <div style="width:28px;height:28px;background:#FFD800;border-radius:6px;"></div>
+        <span style="color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;">SECCIÓN AMARILLA</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div style="background:#1E293B;border-radius:8px;padding:10px;">
+          <div style="color:#64748B;font-size:9px;margin-bottom:4px;">CLICS HOY</div>
+          <div style="color:#FFD800;font-size:18px;font-weight:800;">2,847</div>
+        </div>
+        <div style="background:#1E293B;border-radius:8px;padding:10px;">
+          <div style="color:#64748B;font-size:9px;margin-bottom:4px;">IMPRESIONES</div>
+          <div style="color:#fff;font-size:18px;font-weight:800;">14.2K</div>
+        </div>
+        <div style="background:#1E293B;border-radius:8px;padding:10px;">
+          <div style="color:#64748B;font-size:9px;margin-bottom:4px;">NEGOCIOS</div>
+          <div style="color:#fff;font-size:18px;font-weight:800;">3</div>
+        </div>
+      </div>
+      <div style="background:#1E293B;border-radius:8px;padding:10px;height:50px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:100%;height:2px;background:linear-gradient(90deg,#1E293B 0%,#FFD800 40%,#3B82F6 100%);border-radius:2px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dark Professional</h3>
+      <p>Fondo oscuro, acentos en amarillo SA. Sensación premium, datos que resaltan. Ideal para dashboards analíticos.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="clean" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#F8FAFC;padding:16px;font-family:Inter,sans-serif;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:24px;height:24px;background:#FFD800;border-radius:50%;"></div>
+          <span style="color:#0F172A;font-size:11px;font-weight:700;">Mi Panel</span>
+        </div>
+        <div style="width:24px;height:24px;background:#E2E8F0;border-radius:50%;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div style="background:#fff;border-radius:10px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+          <div style="color:#94A3B8;font-size:9px;margin-bottom:3px;">Clics totales</div>
+          <div style="color:#0F172A;font-size:16px;font-weight:800;">2,847</div>
+          <div style="color:#22C55E;font-size:9px;margin-top:2px;">↑ 12% esta semana</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+          <div style="color:#94A3B8;font-size:9px;margin-bottom:3px;">Impresiones</div>
+          <div style="color:#0F172A;font-size:16px;font-weight:800;">14.2K</div>
+          <div style="color:#EF4444;font-size:9px;margin-top:2px;">↓ 3% esta semana</div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+        <div style="color:#94A3B8;font-size:9px;margin-bottom:6px;">Mis negocios</div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:#FEF9C3;border-radius:6px;padding:6px;font-size:8px;color:#854D0E;font-weight:600;">🍕 Taquería</div>
+          <div style="flex:1;background:#DCFCE7;border-radius:6px;padding:6px;font-size:8px;color:#166534;font-weight:600;">💻 Tech Shop</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Light & Clean</h3>
+      <p>Fondo blanco/gris claro, tarjetas con sombra suave, tendencias con flechas. Moderno, familiar, fácil de leer.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="colorful" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#FFD800 0%,#FF8C00 100%);padding:16px;font-family:Inter,sans-serif;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,.15);border-radius:50%;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div>
+          <div style="color:rgba(255,255,255,.8);font-size:9px;letter-spacing:1px;">BIENVENIDO</div>
+          <div style="color:#fff;font-size:13px;font-weight:800;">Juan Pérez</div>
+        </div>
+        <div style="background:rgba(255,255,255,.25);border-radius:8px;padding:4px 8px;font-size:9px;color:#fff;font-weight:600;">3 negocios</div>
+      </div>
+      <div style="background:rgba(255,255,255,.95);border-radius:12px;padding:10px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:9px;color:#666;font-weight:600;">RENDIMIENTO HOY</span>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <div><div style="font-size:16px;font-weight:800;color:#0F172A;">2,847</div><div style="font-size:8px;color:#999;">Clics</div></div>
+          <div><div style="font-size:16px;font-weight:800;color:#0F172A;">14.2K</div><div style="font-size:8px;color:#999;">Impresiones</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:rgba(255,255,255,.9);border-radius:8px;padding:7px;font-size:8px;color:#333;font-weight:600;">🍕 Taquería</div>
+        <div style="background:rgba(255,255,255,.9);border-radius:8px;padding:7px;font-size:8px;color:#333;font-weight:600;">💻 Tech Shop</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Brand Bold</h3>
+      <p>Header con gradiente amarillo SA, contenido sobre fondo blanco. Impactante, on-brand, sensación de app móvil.</p>
+    </div>
+  </div>
+
+</div>

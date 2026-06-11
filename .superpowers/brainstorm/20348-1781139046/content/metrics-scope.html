@@ -1,0 +1,139 @@
+<h2>¿Cómo se muestran las métricas con múltiples negocios?</h2>
+<p class="subtitle">El usuario tiene 3 negocios registrados. ¿Qué ve en el dashboard principal?</p>
+
+<div class="split">
+
+  <div class="mockup">
+    <div class="mockup-header">Opción A — Métricas globales + selector</div>
+    <div class="mockup-body" style="background:#0F172A;padding:16px;font-family:Inter,sans-serif;min-height:320px;">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <span style="color:#FFD800;font-size:13px;font-weight:800;letter-spacing:1px;">◈ PANEL</span>
+        <div style="background:#1E293B;border-radius:20px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
+          <div style="width:8px;height:8px;background:#FFD800;border-radius:50%;"></div>
+          <span style="color:#fff;font-size:10px;">Todos los negocios</span>
+          <span style="color:#64748B;font-size:10px;">▼</span>
+        </div>
+      </div>
+      <!-- KPIs agregados -->
+      <div style="color:#64748B;font-size:9px;letter-spacing:1px;margin-bottom:8px;">TOTALES (3 NEGOCIOS)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:#1E293B;border-radius:10px;padding:10px;">
+          <div style="color:#64748B;font-size:8px;margin-bottom:3px;">CLICS</div>
+          <div style="color:#FFD800;font-size:18px;font-weight:800;">8,541</div>
+          <div style="color:#22C55E;font-size:8px;">↑ 8%</div>
+        </div>
+        <div style="background:#1E293B;border-radius:10px;padding:10px;">
+          <div style="color:#64748B;font-size:8px;margin-bottom:3px;">IMPRESIONES</div>
+          <div style="color:#fff;font-size:18px;font-weight:800;">42.7K</div>
+          <div style="color:#22C55E;font-size:8px;">↑ 5%</div>
+        </div>
+        <div style="background:#1E293B;border-radius:10px;padding:10px;">
+          <div style="color:#64748B;font-size:8px;margin-bottom:3px;">NEGOCIOS</div>
+          <div style="color:#fff;font-size:18px;font-weight:800;">3</div>
+          <div style="color:#64748B;font-size:8px;">activos</div>
+        </div>
+      </div>
+      <!-- Chart placeholder -->
+      <div style="background:#1E293B;border-radius:10px;padding:10px;height:60px;margin-bottom:12px;display:flex;align-items:flex-end;gap:3px;overflow:hidden;">
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:40%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:65%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:50%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:80%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:60%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:90%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#FFD800,transparent);height:70%;border-radius:2px 2px 0 0;opacity:.7;"></div>
+      </div>
+      <!-- Business list mini -->
+      <div style="color:#64748B;font-size:9px;letter-spacing:1px;margin-bottom:8px;">MIS NEGOCIOS</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="background:#1E293B;border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#fff;font-size:10px;">🍕 Taquería El Buen Sabor</span>
+          <span style="color:#FFD800;font-size:9px;">2,847 clics →</span>
+        </div>
+        <div style="background:#1E293B;border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#fff;font-size:10px;">💻 Tech Solutions</span>
+          <span style="color:#FFD800;font-size:9px;">3,210 clics →</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 0;font-size:12px;color:#94A3B8;">
+      Vista global con total combinado. Dropdown para filtrar por negocio específico.
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Opción B — Tarjetas por negocio con métricas individuales</div>
+    <div class="mockup-body" style="background:#0F172A;padding:16px;font-family:Inter,sans-serif;min-height:320px;">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <span style="color:#FFD800;font-size:13px;font-weight:800;letter-spacing:1px;">◈ PANEL</span>
+        <div style="background:#FFD800;border-radius:6px;padding:4px 10px;">
+          <span style="color:#0F172A;font-size:10px;font-weight:700;">+ Agregar negocio</span>
+        </div>
+      </div>
+      <!-- KPIs arriba -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:#1E293B;border-radius:10px;padding:10px;">
+          <div style="color:#64748B;font-size:8px;margin-bottom:3px;">CLICS TOTALES</div>
+          <div style="color:#FFD800;font-size:16px;font-weight:800;">8,541</div>
+        </div>
+        <div style="background:#1E293B;border-radius:10px;padding:10px;">
+          <div style="color:#64748B;font-size:8px;margin-bottom:3px;">IMPRESIONES TOTALES</div>
+          <div style="color:#fff;font-size:16px;font-weight:800;">42.7K</div>
+        </div>
+      </div>
+      <!-- Chart global pequeño -->
+      <div style="background:#1E293B;border-radius:10px;padding:8px;height:45px;margin-bottom:12px;display:flex;align-items:flex-end;gap:2px;overflow:hidden;">
+        <div style="flex:1;background:#FFD800;height:50%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+        <div style="flex:1;background:#FFD800;height:70%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+        <div style="flex:1;background:#FFD800;height:45%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+        <div style="flex:1;background:#FFD800;height:85%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+        <div style="flex:1;background:#FFD800;height:60%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+        <div style="flex:1;background:#FFD800;height:95%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+        <div style="flex:1;background:#FFD800;height:75%;border-radius:1px 1px 0 0;opacity:.5;"></div>
+      </div>
+      <!-- Business cards -->
+      <div style="color:#64748B;font-size:9px;letter-spacing:1px;margin-bottom:8px;">MIS NEGOCIOS (3)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:#1E293B;border-radius:10px;padding:10px;border:1px solid #334155;">
+          <div style="font-size:16px;margin-bottom:4px;">🍕</div>
+          <div style="color:#fff;font-size:10px;font-weight:700;margin-bottom:6px;">Taquería El Buen Sabor</div>
+          <div style="display:flex;justify-content:space-between;">
+            <div><div style="color:#64748B;font-size:8px;">Clics</div><div style="color:#FFD800;font-size:12px;font-weight:700;">2,847</div></div>
+            <div><div style="color:#64748B;font-size:8px;">Impresiones</div><div style="color:#fff;font-size:12px;font-weight:700;">14.2K</div></div>
+          </div>
+        </div>
+        <div style="background:#1E293B;border-radius:10px;padding:10px;border:1px solid #334155;">
+          <div style="font-size:16px;margin-bottom:4px;">💻</div>
+          <div style="color:#fff;font-size:10px;font-weight:700;margin-bottom:6px;">Tech Solutions MX</div>
+          <div style="display:flex;justify-content:space-between;">
+            <div><div style="color:#64748B;font-size:8px;">Clics</div><div style="color:#FFD800;font-size:12px;font-weight:700;">3,210</div></div>
+            <div><div style="color:#64748B;font-size:8px;">Impresiones</div><div style="color:#fff;font-size:12px;font-weight:700;">16.1K</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 0;font-size:12px;color:#94A3B8;">
+      KPIs globales arriba, gráfica global, tarjetas individuales con métricas por negocio abajo.
+    </div>
+  </div>
+
+</div>
+
+<div class="options" style="margin-top:20px;">
+  <div class="option" data-choice="A" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Opción A — Global con selector</h3>
+      <p>Métricas combinadas. Dropdown para filtrar por un negocio específico. Lista de negocios con clics rápidos.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="B" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Opción B — Grid de tarjetas individuales</h3>
+      <p>KPIs globales + gráfica arriba. Grid de tarjetas debajo, cada una con los datos de un negocio. Botón "Agregar negocio".</p>
+    </div>
+  </div>
+</div>

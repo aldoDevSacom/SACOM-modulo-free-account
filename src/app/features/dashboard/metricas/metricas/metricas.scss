@@ -4,18 +4,52 @@
   max-width: 1200px;
   margin: 0 auto;
 
-  &__welcome { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: $spacing-lg; gap: $spacing-md; }
-  &__welcome-title { font-size: 24px; font-weight: $font-weight-black; color: $color-text; span { font-weight: $font-weight-regular; color: $color-text-muted; } }
-  &__welcome-sub { font-size: 12px; color: $color-text-muted; margin-top: 2px; }
+  &__welcome {
+    display: flex; align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: $spacing-lg; gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+  &__welcome-title {
+    font-size: 24px; font-weight: $font-weight-black; color: $color-text;
+    display: flex; align-items: center; gap: 6px;
+  }
+  &__welcome-name { color: $color-text; }
+  &__welcome-sub  { font-size: 12px; color: $color-text-muted; margin-top: 4px; }
+
   &__kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: $spacing-md; }
-  &__grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; align-items: start; }
+  &__grid    { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; align-items: start; }
+
   &__chart-card { background: $color-card-bg; border-radius: $radius-xl; padding: $spacing-md; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
   &__chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: $spacing-md; }
   &__chart-title { font-size: 14px; font-weight: $font-weight-extrabold; color: $color-text; }
-  &__chart-sub { font-size: 11px; color: $color-text-muted; margin-top: 2px; }
+  &__chart-sub   { font-size: 11px; color: $color-text-muted; margin-top: 2px; }
+
+  &__pin-icon { color: $color-primary; }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-xl $spacing-lg;
+    background: $color-card-bg;
+    border-radius: $radius-xl;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    margin-top: $spacing-lg;
+  }
+  &__empty-icon {
+    width: 60px; height: 60px;
+    background: $color-bg;
+    border-radius: $radius-xl;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto $spacing-md;
+    color: $color-text-muted;
+  }
+  &__empty-title { font-size: 16px; font-weight: $font-weight-black; color: $color-text; margin-bottom: $spacing-xs; }
+  &__empty-sub   { font-size: 13px; color: $color-text-muted; margin-bottom: $spacing-lg; }
 }
 
 @media (max-width: $bp-md) {
-  .metricas__kpi-row { grid-template-columns: 1fr 1fr; }
-  .metricas__grid { grid-template-columns: 1fr; }
+  .metricas {
+    &__kpi-row { grid-template-columns: 1fr 1fr; }
+    &__grid    { grid-template-columns: 1fr; }
+  }
 }

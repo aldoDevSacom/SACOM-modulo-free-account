@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drawer — 3 modos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #1a1a2e; font-family: 'Inter', Arial, sans-serif; padding: 24px; }
+h2 { color: #fff; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+p { color: rgba(255,255,255,.5); font-size: 12px; margin-bottom: 24px; }
+.modes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.mode-label {
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.5);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.drawer {
+  background: #fff;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid #F4F4F4;
+}
+.drawer-title { font-size: 14px; font-weight: 900; color: #1A1A1A; }
+.drawer-close {
+  width: 28px;
+  height: 28px;
+  background: #F4F4F4;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+}
+.drawer-body { padding: 16px 18px; flex: 1; overflow-y: auto; }
+.drawer-footer {
+  padding: 14px 18px;
+  border-top: 1px solid #F4F4F4;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.btn-primary {
+  background: #1A1A1A;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  text-align: center;
+}
+.btn-secondary {
+  background: transparent;
+  color: #666;
+  border: 1.5px solid #E5E5E5;
+  border-radius: 20px;
+  padding: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  text-align: center;
+}
+.btn-danger {
+  background: transparent;
+  color: #DC2626;
+  border: 1.5px solid #DC2626;
+  border-radius: 20px;
+  padding: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  text-align: center;
+}
+.biz-hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F4F4F4;
+}
+.biz-emoji {
+  width: 52px;
+  height: 52px;
+  background: #FEF9C3;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+.biz-name { font-size: 15px; font-weight: 900; color: #1A1A1A; }
+.biz-cat { font-size: 11px; color: #999; margin-top: 2px; }
+.info-grid { display: flex; flex-direction: column; gap: 10px; }
+.info-item { }
+.info-label { font-size: 9px; font-weight: 700; color: #999; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 3px; }
+.info-value { font-size: 12px; font-weight: 600; color: #1A1A1A; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.tag { background: #F4F4F4; color: #1A1A1A; font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 8px; }
+.tag-yellow { background: #FFD800; color: #1A1A1A; }
+.form-group { margin-bottom: 12px; }
+.form-label { font-size: 10px; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; display: block; }
+.form-input {
+  width: 100%;
+  height: 36px;
+  border: 1.5px solid #E5E5E5;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #1A1A1A;
+  outline: none;
+  background: #fff;
+}
+.form-input:focus { border-color: #FFD800; }
+.form-input::placeholder { color: #bbb; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.form-textarea {
+  width: 100%;
+  border: 1.5px solid #E5E5E5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #1A1A1A;
+  outline: none;
+  resize: vertical;
+  min-height: 64px;
+}
+.form-textarea:focus { border-color: #FFD800; }
+.form-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #999;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  margin: 14px 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #F4F4F4;
+}
+.logo-upload {
+  width: 100%;
+  height: 64px;
+  border: 2px dashed #E5E5E5;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+}
+.logo-upload:hover { border-color: #FFD800; color: #1A1A1A; }
+.map-placeholder {
+  width: 100%;
+  height: 90px;
+  background: #F4F4F4;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 12px;
+  border: 1px solid #E5E5E5;
+  flex-direction: column;
+  gap: 4px;
+}
+.map-placeholder span { font-size: 10px; color: #999; font-weight: 600; }
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.step-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.step-dot.active { background: #FFD800; color: #1A1A1A; }
+.step-dot.done { background: #1A1A1A; color: #FFD800; }
+.step-dot.pending { background: #F4F4F4; color: #999; }
+.step-line { flex: 1; height: 2px; background: #E5E5E5; }
+.step-line.done { background: #1A1A1A; }
+.kpi-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.kpi-mini {
+  flex: 1;
+  background: #F4F4F4;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.kpi-mini-value { font-size: 16px; font-weight: 900; color: #1A1A1A; }
+.kpi-mini-label { font-size: 9px; color: #999; font-weight: 600; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<h2>Drawer lateral — 3 modos</h2>
+<p>Un solo componente reutilizable con @Input() mode: 'detail' | 'edit' | 'add'</p>
+
+<div class="modes">
+
+  <!-- MODO: DETAIL -->
+  <div>
+    <div class="mode-label">Modo: detail — clic en negocio</div>
+    <div class="drawer" style="height:560px;">
+      <div class="drawer-header">
+        <div class="drawer-title">Detalle del negocio</div>
+        <div class="drawer-close">✕</div>
+      </div>
+      <div class="drawer-body">
+        <div class="biz-hero">
+          <div class="biz-emoji">🍕</div>
+          <div>
+            <div class="biz-name">Taquería El Buen Sabor</div>
+            <div class="biz-cat">Restaurantes · Roma Norte, CDMX</div>
+          </div>
+        </div>
+        <!-- Mini KPIs -->
+        <div class="kpi-row">
+          <div class="kpi-mini">
+            <div class="kpi-mini-value" style="color:#FFD800;-webkit-text-stroke:1px #1a1a1a;">2,847</div>
+            <div class="kpi-mini-label">Clics</div>
+          </div>
+          <div class="kpi-mini">
+            <div class="kpi-mini-value">14.2K</div>
+            <div class="kpi-mini-label">Impresiones</div>
+          </div>
+          <div class="kpi-mini">
+            <div class="kpi-mini-value">20%</div>
+            <div class="kpi-mini-label">CTR</div>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Teléfono de publicación</div>
+            <div class="info-value">(55) 5123-4567</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Sitio web</div>
+            <div class="info-value">www.buensabor.com</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Dirección</div>
+            <div class="info-value">Av. Insurgentes Sur 123, Roma Norte, 06700 CDMX</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Horario</div>
+            <div class="info-value">Lun–Vie 8:00–22:00 · Sáb 9:00–23:00</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Productos / servicios</div>
+            <div class="tags">
+              <span class="tag">tacos</span><span class="tag">quesadillas</span><span class="tag">tortas</span><span class="tag tag-yellow">+3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn-primary">✏️ Editar información</button>
+        <button class="btn-danger">🗑 Eliminar negocio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODO: EDIT -->
+  <div>
+    <div class="mode-label">Modo: edit — clic en "Editar información"</div>
+    <div class="drawer" style="height:560px;">
+      <div class="drawer-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:28px;height:28px;background:#F4F4F4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:#666;">←</div>
+          <div class="drawer-title">Editar negocio</div>
+        </div>
+        <div class="drawer-close">✕</div>
+      </div>
+      <div class="drawer-body" style="overflow-y:auto;">
+        <div class="biz-hero" style="margin-bottom:12px;padding-bottom:12px;">
+          <div class="biz-emoji" style="width:40px;height:40px;border-radius:10px;font-size:20px;">🍕</div>
+          <div>
+            <div class="biz-name" style="font-size:13px;">Taquería El Buen Sabor</div>
+            <div class="biz-cat">Editando información</div>
+          </div>
+        </div>
+        <div class="form-section-title">Datos de contacto</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input class="form-input" value="Juan Pérez García" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input class="form-input" value="5551234567">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo</label>
+          <input class="form-input" value="juan@buensabor.com">
+        </div>
+        <div class="form-section-title">Datos del negocio</div>
+        <div class="form-group">
+          <label class="form-label">Nombre comercial</label>
+          <input class="form-input" value="Taquería El Buen Sabor">
+        </div>
+        <div class="map-placeholder">
+          🗺️
+          <span>Google Maps — arrastra el marcador</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Giro</label>
+            <input class="form-input" value="Restaurantes">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono público</label>
+            <input class="form-input" value="5559876543">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Logo</label>
+          <div class="logo-upload">📤 Cambiar logo</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Productos / servicios</label>
+          <textarea class="form-textarea">tacos, quesadillas, tortas, burritos</textarea>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn-primary">💾 Guardar cambios</button>
+        <button class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODO: ADD -->
+  <div>
+    <div class="mode-label">Modo: add — clic en "+ Agregar negocio"</div>
+    <div class="drawer" style="height:560px;">
+      <div class="drawer-header">
+        <div class="drawer-title">Nuevo negocio</div>
+        <div class="drawer-close">✕</div>
+      </div>
+      <div class="drawer-body" style="overflow-y:auto;">
+        <!-- Step indicator -->
+        <div class="step-indicator" style="margin-bottom:16px;">
+          <div class="step-dot done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-dot active">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot pending">3</div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#1A1A1A;margin-bottom:2px;">Paso 2 de 3 — Datos del negocio</div>
+        <div style="font-size:10px;color:#999;margin-bottom:14px;">Llena la información que verán tus clientes</div>
+
+        <div class="form-group">
+          <label class="form-label">Nombre comercial *</label>
+          <input class="form-input" placeholder="Ej. Taquería El Buen Sabor">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Giro del negocio *</label>
+            <input class="form-input" placeholder="Ej. Restaurantes">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono público *</label>
+            <input class="form-input" placeholder="10 dígitos">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ubicación *</label>
+          <div class="map-placeholder">
+            🗺️
+            <span>Haz clic o arrastra para ubicar</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Logo</label>
+          <div class="logo-upload">📤 Subir logo (.jpg, .png, .webp)</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Productos / servicios *</label>
+          <textarea class="form-textarea" placeholder="Hasta 25 palabras separadas por comas"></textarea>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn-primary">Siguiente →</button>
+        <button class="btn-secondary">← Atrás</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
