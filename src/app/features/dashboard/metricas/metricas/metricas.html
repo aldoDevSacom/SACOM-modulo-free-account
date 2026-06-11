@@ -1,18 +1,44 @@
 <div class="metricas">
-  <h2 class="metricas__title">Métricas — últimos 30 días</h2>
-
-  <div class="metricas__kpis">
-    <div class="metricas__kpi">
-      <span class="metricas__kpi-value">{{ totalClicks | number }}</span>
-      <span class="metricas__kpi-label">Clics totales</span>
+  <div class="metricas__welcome">
+    <div>
+      <h1 class="metricas__welcome-title">Bienvenido, <span>{{ userName }} 📍</span></h1>
+      <p class="metricas__welcome-sub">Panel de control · Últimos 30 días · {{ businesses.length }} negocio{{ businesses.length !== 1 ? 's' : '' }} activo{{ businesses.length !== 1 ? 's' : '' }}</p>
     </div>
-    <div class="metricas__kpi">
-      <span class="metricas__kpi-value">{{ totalImpressions | number }}</span>
-      <span class="metricas__kpi-label">Impresiones totales</span>
-    </div>
+    <button class="btn-accent" (click)="openDrawerAdd()">+ Agregar negocio</button>
   </div>
 
-  <div class="metricas__chart">
-    <app-line-chart [data]="data"></app-line-chart>
+  <div class="metricas__kpi-row">
+    <app-kpi-card label="Clics totales"  [value]="totalClicks"      badge="↑ 8%"  badgeType="up"></app-kpi-card>
+    <app-kpi-card label="Impresiones"    [value]="totalImpressions"  badge="↓ 3%"  badgeType="down"></app-kpi-card>
+    <app-kpi-card label="CTR promedio"   [value]="ctr"               badge="↑ 2%"  badgeType="up"></app-kpi-card>
+    <app-kpi-card label="Mis negocios"   [value]="businesses.length" [accent]="true"></app-kpi-card>
+  </div>
+
+  <div class="metricas__grid">
+    <div class="metricas__chart-card">
+      <div class="metricas__chart-header">
+        <div>
+          <div class="metricas__chart-title">Engagement — últimos 30 días</div>
+          <div class="metricas__chart-sub">Clics e impresiones · todos los negocios</div>
+        </div>
+      </div>
+      <app-line-chart [data]="chartData"></app-line-chart>
+    </div>
+    <app-business-list-card
+      [businesses]="businesses"
+      [metrics]="metrics"
+      (businessSelected)="openDrawerDetail($event)"
+      (addRequested)="openDrawerAdd()">
+    </app-business-list-card>
   </div>
 </div>
+
+<app-business-drawer
+  *ngIf="drawerOpen"
+  [mode]="drawerMode"
+  [business]="selectedBusiness"
+  [metrics]="metrics"
+  (closed)="closeDrawer()"
+  (saved)="onDrawerSaved($event)"
+  (deleted)="onDrawerDeleted($event)">
+</app-business-drawer>

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Metricas } from './metricas';
 import { MetricsMockService } from '../../../../core/services/metrics.mock.service';
 import { BusinessMockService } from '../../../../core/services/business.mock.service';
-import { LineChart } from '../line-chart/line-chart';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { AuthMockService } from '../../../../core/services/auth.mock.service';
 
 describe('Metricas', () => {
   let component: Metricas;
@@ -11,12 +11,12 @@ describe('Metricas', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Metricas, LineChart],
-      imports: [BaseChartDirective],
+      declarations: [Metricas],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         MetricsMockService,
         BusinessMockService,
-        provideCharts(withDefaultRegisterables())
+        AuthMockService
       ]
     })
     .compileComponents();
@@ -31,8 +31,29 @@ describe('Metricas', () => {
   });
 
   it('should load metrics data on init', () => {
-    expect(component.data.length).toBe(30);
+    expect(component.chartData.length).toBe(30);
     expect(component.totalClicks).toBeGreaterThan(0);
     expect(component.totalImpressions).toBeGreaterThan(0);
+  });
+
+  it('should open drawer in detail mode when a business is selected', () => {
+    const biz = component.businesses[0];
+    component.openDrawerDetail(biz);
+    expect(component.drawerOpen).toBeTrue();
+    expect(component.drawerMode).toBe('detail');
+    expect(component.selectedBusiness).toBe(biz);
+  });
+
+  it('should open drawer in add mode when add is requested', () => {
+    component.openDrawerAdd();
+    expect(component.drawerOpen).toBeTrue();
+    expect(component.drawerMode).toBe('add');
+    expect(component.selectedBusiness).toBeNull();
+  });
+
+  it('should close drawer on closeDrawer()', () => {
+    component.drawerOpen = true;
+    component.closeDrawer();
+    expect(component.drawerOpen).toBeFalse();
   });
 });
