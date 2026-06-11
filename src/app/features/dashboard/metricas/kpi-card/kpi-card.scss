@@ -1,0 +1,31 @@
+@use 'styles/variables' as *;
+
+.kpi-card {
+  background: $color-card-bg;
+  border-radius: $radius-xl;
+  padding: $spacing-md;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+
+  &--accent {
+    background: $color-primary;
+    .kpi-card__label { color: rgba(0,0,0,.5); }
+    .kpi-card__value { color: $color-text; }
+  }
+
+  &__label {
+    font-size: 10px;
+    font-weight: $font-weight-bold;
+    color: $color-text-muted;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  &__value {
+    font-size: 26px;
+    font-weight: $font-weight-black;
+    color: $color-text;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+}

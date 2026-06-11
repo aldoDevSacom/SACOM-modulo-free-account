@@ -1,0 +1,7 @@
+<div class="kpi-card" [class.kpi-card--accent]="accent">
+  <div class="kpi-card__label">{{ label }}</div>
+  <div class="kpi-card__value">{{ displayValue }}</div>
+  <span *ngIf="badge" [class]="badgeType === 'up' ? 'badge-up' : badgeType === 'down' ? 'badge-down' : ''">
+    {{ badge }}
+  </span>
+</div>
