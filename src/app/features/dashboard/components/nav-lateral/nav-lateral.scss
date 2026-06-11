@@ -1,0 +1,21 @@
+@use 'styles/variables' as *;
+
+.nav-lateral {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  background: $color-white;
+  border-right: 1px solid $color-border;
+
+  &__item {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: $font-weight-semibold;
+    color: $color-text;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+
+    &:hover { background: $color-bg; }
+    &--active { border-left-color: $color-primary; background: $color-bg; }
+  }
+}

@@ -1,0 +1,20 @@
+@use 'styles/variables' as *;
+
+.nav-inferior {
+  display: flex;
+  position: sticky;
+  bottom: 0;
+  background: $color-white;
+  border-top: 1px solid $color-border;
+
+  &__item {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 12px;
+    font-weight: $font-weight-semibold;
+    color: $color-text-light;
+
+    &--active { color: $color-text; border-top: 2px solid $color-primary; }
+  }
+}
