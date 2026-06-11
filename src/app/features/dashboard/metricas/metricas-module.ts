@@ -5,11 +5,12 @@ import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2
 import { Metricas } from './metricas/metricas';
 import { LineChart } from './line-chart/line-chart';
 import { KpiCard } from './kpi-card/kpi-card';
+import { BusinessListCard } from './business-list-card/business-list-card';
 
 const routes: Routes = [{ path: '', component: Metricas }];
 
 @NgModule({
-  declarations: [Metricas, LineChart, KpiCard],
+  declarations: [Metricas, LineChart, KpiCard, BusinessListCard],
   imports: [CommonModule, RouterModule.forChild(routes), BaseChartDirective],
   providers: [provideCharts(withDefaultRegisterables())]
 })

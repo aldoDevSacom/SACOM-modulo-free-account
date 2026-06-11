@@ -1,0 +1,40 @@
+@use 'styles/variables' as *;
+
+.biz-list-card {
+  background: $color-card-bg;
+  border-radius: $radius-xl;
+  padding: $spacing-md;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  height: 100%;
+
+  &__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: $spacing-md; }
+  &__title { font-size: 14px; font-weight: $font-weight-extrabold; color: $color-text; }
+  &__count { background: $color-bg; font-size: 11px; font-weight: $font-weight-bold; color: $color-text-light; padding: 2px 8px; border-radius: $radius-full; }
+  &__rows { display: flex; flex-direction: column; gap: 4px; }
+  &__row {
+    display: flex; align-items: center; gap: 10px; padding: 8px;
+    border-radius: $radius-lg; cursor: pointer; transition: background .15s;
+    border: 1.5px solid transparent;
+    &:hover { background: $color-bg; border-color: $color-primary; }
+    &--add {
+      border: 1.5px dashed $color-border; justify-content: flex-start; gap: 8px;
+      &:hover { border-color: $color-primary; background: #FFFBEB; }
+    }
+  }
+  &__icon {
+    width: 36px; height: 36px; background: $color-bg; border-radius: $radius-md;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+  }
+  &__info { flex: 1; min-width: 0; }
+  &__name { font-size: 12px; font-weight: $font-weight-extrabold; color: $color-text; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__cat { font-size: 10px; color: $color-text-muted; margin-top: 1px; }
+  &__meta { text-align: right; }
+  &__clicks { font-size: 13px; font-weight: $font-weight-black; color: $color-text; }
+  &__clicks-label { font-size: 9px; color: $color-text-muted; }
+  &__arrow { font-size: 16px; color: $color-border; }
+  &__add-icon {
+    width: 28px; height: 28px; background: $color-primary; border-radius: $radius-md;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: $font-weight-black; flex-shrink: 0;
+  }
+  &__add-label { font-size: 12px; font-weight: $font-weight-bold; color: $color-text; }
+}
