@@ -24,7 +24,7 @@ export class BusinessMockService {
   }
 
   addBusiness(data: Omit<Business, 'id' | 'userId'>): Observable<Business> {
-    const newBiz: Business = { ...data as Business, id: crypto.randomUUID(), userId: 'usr-001' };
+    const newBiz: Business = { ...data, id: crypto.randomUUID(), userId: 'usr-001' };
     this.save([...this.businesses(), newBiz]);
     return of(newBiz);
   }

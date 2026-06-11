@@ -66,4 +66,26 @@ describe('BusinessMockService', () => {
       done();
     });
   });
+
+  it('getBusinessById() returns the business when found and undefined otherwise', () => {
+    const existing = service.businesses()[0];
+    expect(service.getBusinessById(existing.id)).toEqual(existing);
+    expect(service.getBusinessById('does-not-exist')).toBeUndefined();
+  });
+
+  it('addBusiness() persists the new list to sessionStorage', (done) => {
+    const initial = service.businesses().length;
+    service.addBusiness({
+      businessName: 'Persisted Biz',
+      contactName: 'T', contactEmail: 't@t.com', contactPhone: '5551234567',
+      categoryCode: 1, category: 'Test', website: '', publicPhone: '5551234567',
+      products: 'test', logoUrl: '',
+      address: { fullAddress: '', street: '', exteriorNumber: '', colony: '', postalCode: '', city: '', state: '', lat: 0, lng: 0 },
+      hours: { allDay: true, weekdays: null, saturday: null, sunday: null }
+    }).subscribe(() => {
+      const stored = JSON.parse(sessionStorage.getItem('sa_businesses')!);
+      expect(stored.length).toBe(initial + 1);
+      done();
+    });
+  });
 });
