@@ -17,7 +17,7 @@ export class Dashboard {
     private businessService: BusinessMockService,
     private router: Router
   ) {
-    this.businessName = this.businessService.business().businessName;
+    this.businessName = this.businessService.businesses()[0]?.businessName ?? '';
   }
 
   logout(): void {

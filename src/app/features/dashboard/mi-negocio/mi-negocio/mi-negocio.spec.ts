@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { of } from 'rxjs';
 import { MiNegocio } from './mi-negocio';
 import { BusinessMockService } from '../../../../core/services/business.mock.service';
@@ -43,8 +43,9 @@ describe('MiNegocio', () => {
   let mockService: jasmine.SpyObj<BusinessMockService>;
 
   beforeEach(async () => {
-    mockService = jasmine.createSpyObj('BusinessMockService', ['getBusiness', 'updateBusiness']);
-    mockService.getBusiness.and.returnValue(of(mockBusiness));
+    mockService = jasmine.createSpyObj('BusinessMockService', ['updateBusiness'], {
+      businesses: signal([mockBusiness])
+    });
     mockService.updateBusiness.and.returnValue(of(mockBusiness));
 
     await TestBed.configureTestingModule({
@@ -64,13 +65,12 @@ describe('MiNegocio', () => {
   });
 
   it('should load business on init', () => {
-    expect(mockService.getBusiness).toHaveBeenCalled();
     expect(component.business).toEqual(mockBusiness);
   });
 
   it('should call updateBusiness and set saved flag on save', (done) => {
     component.onSave(mockBusiness);
-    expect(mockService.updateBusiness).toHaveBeenCalledWith(mockBusiness);
+    expect(mockService.updateBusiness).toHaveBeenCalledWith(mockBusiness.id, mockBusiness);
     setTimeout(() => {
       expect(component.saved).toBeTrue();
       done();

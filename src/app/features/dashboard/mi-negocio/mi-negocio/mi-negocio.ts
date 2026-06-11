@@ -15,11 +15,11 @@ export class MiNegocio implements OnInit {
   constructor(private businessService: BusinessMockService) {}
 
   ngOnInit(): void {
-    this.businessService.getBusiness().subscribe(b => this.business = b);
+    this.business = this.businessService.businesses()[0];
   }
 
   onSave(data: Business): void {
-    this.businessService.updateBusiness(data).subscribe(() => {
+    this.businessService.updateBusiness(data.id, data).subscribe(() => {
       this.saved = true;
       setTimeout(() => this.saved = false, 3000);
     });

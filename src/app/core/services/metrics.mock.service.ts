@@ -5,7 +5,7 @@ import { DailyMetric, Metrics } from '../models/metrics.model';
 @Injectable({ providedIn: 'root' })
 export class MetricsMockService {
   getMetrics(businessId: string): Observable<Metrics> {
-    return of({ businessId, last30Days: this.generate() });
+    return of({ businessIds: [businessId], last30Days: this.generate() });
   }
 
   private generate(): DailyMetric[] {
