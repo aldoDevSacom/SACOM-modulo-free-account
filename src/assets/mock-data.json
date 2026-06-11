@@ -1,33 +1,66 @@
 {
-  "business": {
-    "id": "biz-001",
-    "userId": "usr-001",
-    "businessName": "Taquería El Buen Sabor",
-    "contactName": "Juan Pérez García",
-    "contactEmail": "juan@buensabor.com",
-    "contactPhone": "5551234567",
-    "categoryCode": 5812,
-    "category": "Restaurantes",
-    "website": "https://www.buensabor.com",
-    "publicPhone": "5559876543",
-    "products": "tacos, quesadillas, tortas, burritos, sopes, tlayudas",
-    "logoUrl": "",
-    "address": {
-      "fullAddress": "Av. Insurgentes Sur 123, Roma Norte, 06700 Ciudad de México, CDMX",
-      "street": "Av. Insurgentes Sur",
-      "exteriorNumber": "123",
-      "colony": "Roma Norte",
-      "postalCode": "06700",
-      "city": "Ciudad de México",
-      "state": "CDMX",
-      "lat": 19.4195,
-      "lng": -99.1674
+  "businesses": [
+    {
+      "id": "biz-001",
+      "userId": "usr-001",
+      "businessName": "Taquería El Buen Sabor",
+      "contactName": "Juan Pérez García",
+      "contactEmail": "juan@buensabor.com",
+      "contactPhone": "5551234567",
+      "categoryCode": 5812,
+      "category": "Restaurantes",
+      "website": "https://www.buensabor.com",
+      "publicPhone": "5559876543",
+      "products": "tacos, quesadillas, tortas, burritos, sopes, tlayudas",
+      "logoUrl": "",
+      "address": {
+        "fullAddress": "Av. Insurgentes Sur 123, Roma Norte, 06700 Ciudad de México, CDMX",
+        "street": "Av. Insurgentes Sur",
+        "exteriorNumber": "123",
+        "colony": "Roma Norte",
+        "postalCode": "06700",
+        "city": "Ciudad de México",
+        "state": "CDMX",
+        "lat": 19.4195,
+        "lng": -99.1674
+      },
+      "hours": {
+        "allDay": false,
+        "weekdays": { "open": "08:00", "close": "22:00" },
+        "saturday": { "open": "09:00", "close": "23:00" },
+        "sunday": { "open": "10:00", "close": "21:00" }
+      }
     },
-    "hours": {
-      "allDay": false,
-      "weekdays": { "open": "08:00", "close": "22:00" },
-      "saturday": { "open": "09:00", "close": "23:00" },
-      "sunday": { "open": "10:00", "close": "21:00" }
+    {
+      "id": "biz-002",
+      "userId": "usr-001",
+      "businessName": "Tech Solutions MX",
+      "contactName": "Juan Pérez García",
+      "contactEmail": "juan@techsolutions.mx",
+      "contactPhone": "5551234567",
+      "categoryCode": 7372,
+      "category": "Tecnología",
+      "website": "https://www.techsolutions.mx",
+      "publicPhone": "5554567890",
+      "products": "desarrollo web, apps móviles, consultoría IT, soporte técnico",
+      "logoUrl": "",
+      "address": {
+        "fullAddress": "Av. Presidente Masaryk 111, Polanco, 11560 Ciudad de México, CDMX",
+        "street": "Av. Presidente Masaryk",
+        "exteriorNumber": "111",
+        "colony": "Polanco",
+        "postalCode": "11560",
+        "city": "Ciudad de México",
+        "state": "CDMX",
+        "lat": 19.4326,
+        "lng": -99.1962
+      },
+      "hours": {
+        "allDay": false,
+        "weekdays": { "open": "09:00", "close": "18:00" },
+        "saturday": null,
+        "sunday": null
+      }
     }
-  }
+  ]
 }

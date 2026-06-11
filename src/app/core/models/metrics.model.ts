@@ -5,6 +5,6 @@ export interface DailyMetric {
 }
 
 export interface Metrics {
-  businessId: string;
+  businessIds: string[];
   last30Days: DailyMetric[];
 }
