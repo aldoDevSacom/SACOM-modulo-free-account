@@ -22,4 +22,14 @@ describe('KpiCard', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('formats numeric value with thousands separators', () => {
+    component.value = 1234;
+    expect(component.displayValue).toBe('1,234');
+  });
+
+  it('passes string value through unchanged', () => {
+    component.value = '3.5%';
+    expect(component.displayValue).toBe('3.5%');
+  });
 });
