@@ -1,0 +1,41 @@
+<div class="seguridad">
+  <h2 class="seguridad__title">Seguridad</h2>
+
+  <div class="seguridad__card">
+    <h3 class="seguridad__subtitle">Cambiar contraseña</h3>
+
+    <span class="success-msg" *ngIf="successMsg">{{ successMsg }}</span>
+    <span class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</span>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="seguridad__form">
+      <div class="seguridad__field">
+        <label>Contraseña actual</label>
+        <input type="password" formControlName="currentPassword" class="seguridad__input">
+      </div>
+
+      <div class="seguridad__field">
+        <label>Nueva contraseña</label>
+        <input type="password" formControlName="newPassword" class="seguridad__input">
+        <app-password-strength [password]="newPassword.value"></app-password-strength>
+        <span class="error-msg" *ngIf="newPassword.touched && newPassword.hasError('minlength')">
+          Mínimo 8 caracteres
+        </span>
+        <span class="error-msg" *ngIf="newPassword.touched && newPassword.hasError('pattern')">
+          Debe incluir al menos una mayúscula y un número
+        </span>
+      </div>
+
+      <div class="seguridad__field">
+        <label>Confirmar nueva contraseña</label>
+        <input type="password" formControlName="confirmPassword" class="seguridad__input">
+        <span class="error-msg" *ngIf="form.hasError('passwordMismatch') && confirmPassword.touched">
+          Las contraseñas no coinciden
+        </span>
+      </div>
+
+      <button type="submit" class="seguridad__btn" [disabled]="form.invalid">
+        ACTUALIZAR CONTRASEÑA
+      </button>
+    </form>
+  </div>
+</div>
