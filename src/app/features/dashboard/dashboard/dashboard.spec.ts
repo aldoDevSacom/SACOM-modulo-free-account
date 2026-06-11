@@ -3,7 +3,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { Dashboard } from './dashboard';
 import { AuthMockService } from '../../../core/services/auth.mock.service';
-import { BusinessMockService } from '../../../core/services/business.mock.service';
 import { Header } from '../components/header/header';
 import { NavLateral } from '../components/nav-lateral/nav-lateral';
 import { NavInferior } from '../components/nav-inferior/nav-inferior';
@@ -16,7 +15,7 @@ describe('Dashboard', () => {
     await TestBed.configureTestingModule({
       declarations: [Dashboard, Header, NavLateral, NavInferior],
       imports: [RouterTestingModule],
-      providers: [AuthMockService, BusinessMockService]
+      providers: [AuthMockService]
     })
     .compileComponents();
 
