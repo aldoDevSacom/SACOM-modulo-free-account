@@ -1,0 +1,33 @@
+@use 'styles/variables' as *;
+
+.metricas {
+  &__title { font-size: 20px; font-weight: $font-weight-bold; margin-bottom: 24px; }
+
+  &__kpis {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  &__kpi {
+    flex: 1;
+    background: $color-white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__kpi-value { font-size: 28px; font-weight: $font-weight-bold; }
+  &__kpi-label { font-size: 13px; color: $color-text-light; }
+
+  &__chart {
+    background: $color-white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+}

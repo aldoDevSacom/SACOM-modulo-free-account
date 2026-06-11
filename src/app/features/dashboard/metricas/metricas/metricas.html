@@ -1,0 +1,18 @@
+<div class="metricas">
+  <h2 class="metricas__title">Métricas — últimos 30 días</h2>
+
+  <div class="metricas__kpis">
+    <div class="metricas__kpi">
+      <span class="metricas__kpi-value">{{ totalClicks | number }}</span>
+      <span class="metricas__kpi-label">Clics totales</span>
+    </div>
+    <div class="metricas__kpi">
+      <span class="metricas__kpi-value">{{ totalImpressions | number }}</span>
+      <span class="metricas__kpi-label">Impresiones totales</span>
+    </div>
+  </div>
+
+  <div class="metricas__chart">
+    <app-line-chart [data]="data"></app-line-chart>
+  </div>
+</div>
