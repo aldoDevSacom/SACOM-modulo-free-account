@@ -13,14 +13,68 @@ label {
   color: $color-text;
 }
 
-.error-msg {
-  color: $color-error;
-  font-size: 12px;
-  margin-top: 4px;
+// Utility classes
+.error-msg  { color: $color-error;   font-size: 12px; margin-top: 4px; }
+.success-msg { color: $color-success; font-size: 14px; margin-top: 8px; }
+
+// KPI
+.kpi-value { font-size: 28px; font-weight: $font-weight-black; color: $color-text; line-height: 1; }
+
+// Badges
+.badge-up   { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: $font-weight-bold; background: #F0FDF4; color: $color-success; }
+.badge-down { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: $font-weight-bold; background: #FEF2F2; color: $color-danger; }
+
+// Buttons
+.btn-primary {
+  background: $color-btn-primary;
+  color: #fff;
+  border: none;
+  border-radius: $radius-full;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: $font-weight-bold;
+  font-family: $font-family;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover:not(:disabled) { background: #2D2D2D; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
-.success-msg {
-  color: $color-success;
-  font-size: 14px;
-  margin-top: 8px;
+.btn-secondary {
+  background: transparent;
+  color: $color-text-light;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-full;
+  padding: 9px 24px;
+  font-size: 13px;
+  font-weight: $font-weight-semibold;
+  font-family: $font-family;
+  cursor: pointer;
+  &:hover { background: $color-bg; }
+}
+
+.btn-danger {
+  background: transparent;
+  color: $color-danger;
+  border: 1.5px solid $color-danger;
+  border-radius: $radius-full;
+  padding: 9px 24px;
+  font-size: 13px;
+  font-weight: $font-weight-bold;
+  font-family: $font-family;
+  cursor: pointer;
+  &:hover { background: #FEF2F2; }
+}
+
+.btn-accent {
+  background: $color-primary;
+  color: $color-text;
+  border: none;
+  border-radius: $radius-full;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: $font-weight-bold;
+  font-family: $font-family;
+  cursor: pointer;
+  &:hover { background: $color-primary-dark; }
 }

@@ -1,19 +1,26 @@
 // Colores
-$color-primary: #FFD800;
-$color-primary-dark: #E5C200;
-$color-bg: #F4F4F4;
-$color-white: #FFFFFF;
-$color-text: #333333;
-$color-text-light: #666666;
-$color-border: #CCCCCC;
-$color-error: #D32F2F;
-$color-success: #388E3C;
+$color-primary:        #FFD800;
+$color-primary-dark:   #E5C200;
+$color-bg:             #F4F4F4;
+$color-white:          #FFFFFF;
+$color-card-bg:        #FFFFFF;
+$color-text:           #1A1A1A;
+$color-text-light:     #666666;
+$color-text-muted:     #999999;
+$color-border:         #E5E5E5;
+$color-btn-primary:    #1A1A1A;
+$color-error:          #DC2626;
+$color-danger:         #DC2626;
+$color-success:        #16A34A;
 
 // Tipografía
-$font-family: 'Roboto', Arial, sans-serif;
-$font-weight-regular: 400;
+$font-family: 'Inter', Arial, sans-serif;
+$font-weight-regular:  400;
+$font-weight-medium:   500;
 $font-weight-semibold: 600;
-$font-weight-bold: 700;
+$font-weight-bold:     700;
+$font-weight-extrabold: 800;
+$font-weight-black:    900;
 
 // Breakpoints (mobile-first)
 $bp-md: 768px;
@@ -27,7 +34,8 @@ $spacing-lg: 24px;
 $spacing-xl: 32px;
 
 // Border radius
-$radius-sm: 4px;
-$radius-md: 8px;
-$radius-lg: 12px;
+$radius-sm:   4px;
+$radius-md:   8px;
+$radius-lg:   12px;
+$radius-xl:   16px;
 $radius-full: 9999px;
