@@ -6,18 +6,18 @@ const routes: Routes = [
   {
     path: 'crear-contrasena',
     loadChildren: () =>
-      import('./features/crear-contrasena/crear-contrasena.module').then(m => m.CrearContrasenaModule)
+      import('./features/crear-contrasena/crear-contrasena-module').then(m => m.CrearContrasenaModule)
   },
   {
     path: 'login',
     loadChildren: () =>
-      import('./features/login/login.module').then(m => m.LoginModule)
+      import('./features/login/login-module').then(m => m.LoginModule)
   },
   {
     path: 'dashboard',
     canActivate: [authGuard],
     loadChildren: () =>
-      import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
+      import('./features/dashboard/dashboard-module').then(m => m.DashboardModule)
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }
