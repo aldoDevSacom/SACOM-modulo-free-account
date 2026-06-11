@@ -21,7 +21,7 @@ export class Metricas implements OnInit {
 
   ngOnInit(): void {
     const bizId = this.businessService.businesses()[0]?.id ?? '';
-    this.metricsService.getMetrics(bizId).subscribe(m => {
+    this.metricsService.getMetrics([bizId]).subscribe(m => {
       this.data = m.last30Days;
       this.totalClicks = this.data.reduce((s, d) => s + d.clicks, 0);
       this.totalImpressions = this.data.reduce((s, d) => s + d.impressions, 0);
