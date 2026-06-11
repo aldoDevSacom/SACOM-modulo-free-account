@@ -1,0 +1,229 @@
+<div class="drawer-backdrop" (click)="closed.emit()"></div>
+
+<div class="drawer-panel">
+
+  <!-- MODO: DETAIL -->
+  <ng-container *ngIf="internalMode === 'detail' && business">
+    <div class="drawer-header">
+      <span class="drawer-title">Detalle del negocio</span>
+      <button class="drawer-close" (click)="closed.emit()">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-biz-hero">
+        <div class="drawer-biz-icon">🏪</div>
+        <div>
+          <div class="drawer-biz-name">{{ business.businessName }}</div>
+          <div class="drawer-biz-cat">{{ business.category }} · {{ business.address.colony }}</div>
+        </div>
+      </div>
+      <div class="drawer-kpis">
+        <div class="drawer-kpi"><div class="drawer-kpi__value">{{ totalClicks | number }}</div><div class="drawer-kpi__label">Clics</div></div>
+        <div class="drawer-kpi"><div class="drawer-kpi__value">{{ totalImpressions | number }}</div><div class="drawer-kpi__label">Impresiones</div></div>
+        <div class="drawer-kpi"><div class="drawer-kpi__value">{{ ctr }}</div><div class="drawer-kpi__label">CTR</div></div>
+      </div>
+      <div class="drawer-info-grid">
+        <div class="drawer-info-item">
+          <div class="drawer-info-label">Teléfono</div>
+          <div class="drawer-info-value">{{ business.publicPhone }}</div>
+        </div>
+        <div class="drawer-info-item" *ngIf="business.website">
+          <div class="drawer-info-label">Sitio web</div>
+          <div class="drawer-info-value">{{ business.website }}</div>
+        </div>
+        <div class="drawer-info-item">
+          <div class="drawer-info-label">Dirección</div>
+          <div class="drawer-info-value">{{ business.address.fullAddress }}</div>
+        </div>
+        <div class="drawer-info-item">
+          <div class="drawer-info-label">Horario</div>
+          <div class="drawer-info-value" *ngIf="business.hours.allDay">24 horas</div>
+          <div class="drawer-info-value" *ngIf="!business.hours.allDay && business.hours.weekdays">
+            Lun–Vie {{ business.hours.weekdays.open }}–{{ business.hours.weekdays.close }}
+          </div>
+        </div>
+        <div class="drawer-info-item">
+          <div class="drawer-info-label">Productos</div>
+          <div class="drawer-tags">
+            <span class="drawer-tag" *ngFor="let p of business.products.split(',').slice(0,4)">{{ p.trim() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn-primary" style="width:100%" (click)="switchToEdit()">✏️ Editar información</button>
+      <button class="btn-danger" style="width:100%;margin-top:8px" (click)="onDelete()">🗑 Eliminar negocio</button>
+    </div>
+  </ng-container>
+
+  <!-- MODO: EDIT -->
+  <ng-container *ngIf="internalMode === 'edit' && form">
+    <div class="drawer-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="drawer-back" (click)="switchToDetail()">←</button>
+        <span class="drawer-title">Editar negocio</span>
+      </div>
+      <button class="drawer-close" (click)="closed.emit()">✕</button>
+    </div>
+    <div class="drawer-body" [formGroup]="form">
+      <div class="drawer-form-section">Datos de contacto</div>
+      <div class="drawer-form-row">
+        <div class="drawer-form-group">
+          <label>Nombre completo</label>
+          <input type="text" formControlName="contactName" class="drawer-input">
+        </div>
+        <div class="drawer-form-group">
+          <label>Teléfono contacto</label>
+          <input type="text" formControlName="contactPhone" maxlength="10" class="drawer-input">
+        </div>
+      </div>
+      <div class="drawer-form-group">
+        <label>Correo</label>
+        <input type="email" formControlName="contactEmail" class="drawer-input">
+      </div>
+      <div class="drawer-form-section">Datos del negocio</div>
+      <div class="drawer-form-group">
+        <label>Nombre comercial</label>
+        <input type="text" formControlName="businessName" class="drawer-input">
+      </div>
+      <div class="drawer-form-row">
+        <div class="drawer-form-group">
+          <label>Giro</label>
+          <input type="text" formControlName="category" class="drawer-input">
+        </div>
+        <div class="drawer-form-group">
+          <label>Tel. publicación</label>
+          <input type="text" formControlName="publicPhone" maxlength="10" class="drawer-input">
+        </div>
+      </div>
+      <div class="drawer-form-group">
+        <label>Sitio web</label>
+        <input type="text" formControlName="website" class="drawer-input">
+      </div>
+      <div class="drawer-form-group">
+        <label>Ubicación</label>
+        <google-map height="160px" width="100%" [center]="mapCenter" [zoom]="zoom" [options]="mapOptions" (mapClick)="onMapClick($event)" style="border-radius:10px;overflow:hidden;display:block;">
+          <map-marker [position]="markerPosition" [options]="{draggable:true}" (mapDragend)="onMarkerDragEnd($event)"></map-marker>
+        </google-map>
+      </div>
+      <div class="drawer-form-group">
+        <label>Productos / servicios</label>
+        <textarea formControlName="products" rows="3" class="drawer-textarea" placeholder="Hasta 25 palabras separadas por comas"></textarea>
+      </div>
+      <div class="drawer-form-group">
+        <label>Logo</label>
+        <label for="logo-edit" class="drawer-logo-drop">
+          <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo" style="height:100%;object-fit:contain;padding:4px;">
+          <span *ngIf="!logoPreview">📤 Subir logo</span>
+        </label>
+        <input id="logo-edit" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none" (change)="onLogoChange($event)">
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn-primary" style="width:100%" (click)="onSave()" [disabled]="form.invalid">💾 Guardar cambios</button>
+      <button class="btn-secondary" style="width:100%;margin-top:8px" (click)="switchToDetail()">Cancelar</button>
+    </div>
+  </ng-container>
+
+  <!-- MODO: ADD -->
+  <ng-container *ngIf="internalMode === 'add' && form">
+    <div class="drawer-header">
+      <span class="drawer-title">Nuevo negocio</span>
+      <button class="drawer-close" (click)="closed.emit()">✕</button>
+    </div>
+    <div class="drawer-body" [formGroup]="form">
+      <div class="drawer-steps">
+        <div class="drawer-step" [class.drawer-step--active]="currentStep === 1" [class.drawer-step--done]="currentStep > 1">1</div>
+        <div class="drawer-step-line" [class.drawer-step-line--done]="currentStep > 1"></div>
+        <div class="drawer-step" [class.drawer-step--active]="currentStep === 2" [class.drawer-step--done]="currentStep > 2">2</div>
+        <div class="drawer-step-line" [class.drawer-step-line--done]="currentStep > 2"></div>
+        <div class="drawer-step" [class.drawer-step--active]="currentStep === 3">3</div>
+      </div>
+      <div class="drawer-step-label">Paso {{ currentStep }} de 3 — {{ ['','Contacto','Negocio','Horarios y logo'][currentStep] }}</div>
+
+      <ng-container *ngIf="currentStep === 1">
+        <div class="drawer-form-group">
+          <label>Nombre completo *</label>
+          <input type="text" formControlName="contactName" class="drawer-input" placeholder="Tu nombre">
+        </div>
+        <div class="drawer-form-group">
+          <label>Correo *</label>
+          <input type="email" formControlName="contactEmail" class="drawer-input" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="drawer-form-group">
+          <label>Teléfono de contacto *</label>
+          <input type="text" formControlName="contactPhone" maxlength="10" class="drawer-input" placeholder="10 dígitos">
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="currentStep === 2">
+        <div class="drawer-form-group">
+          <label>Nombre comercial *</label>
+          <input type="text" formControlName="businessName" class="drawer-input" placeholder="Nombre de tu negocio">
+        </div>
+        <div class="drawer-form-row">
+          <div class="drawer-form-group">
+            <label>Giro *</label>
+            <input type="text" formControlName="category" class="drawer-input" placeholder="Ej. Restaurantes">
+          </div>
+          <div class="drawer-form-group">
+            <label>Tel. publicación *</label>
+            <input type="text" formControlName="publicPhone" maxlength="10" class="drawer-input" placeholder="10 dígitos">
+          </div>
+        </div>
+        <div class="drawer-form-group">
+          <label>Sitio web</label>
+          <input type="text" formControlName="website" class="drawer-input" placeholder="https://...">
+        </div>
+        <div class="drawer-form-group">
+          <label>Ubicación *</label>
+          <google-map height="160px" width="100%" [center]="mapCenter" [zoom]="zoom" [options]="mapOptions" (mapClick)="onMapClick($event)" style="border-radius:10px;overflow:hidden;display:block;">
+            <map-marker [position]="markerPosition" [options]="{draggable:true}" (mapDragend)="onMarkerDragEnd($event)"></map-marker>
+          </google-map>
+        </div>
+        <div class="drawer-form-group">
+          <label>Productos / servicios *</label>
+          <textarea formControlName="products" rows="3" class="drawer-textarea" placeholder="Hasta 25 palabras separadas por comas"></textarea>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="currentStep === 3">
+        <div class="drawer-form-group">
+          <label>Logo</label>
+          <label for="logo-add" class="drawer-logo-drop">
+            <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo" style="height:100%;object-fit:contain;padding:4px;">
+            <span *ngIf="!logoPreview">📤 Subir logo (.jpg, .png, .webp)</span>
+          </label>
+          <input id="logo-add" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none" (change)="onLogoChange($event)">
+        </div>
+        <div class="drawer-form-group">
+          <label class="drawer-checkbox-label">
+            <input type="checkbox" formControlName="allDay"> 24 horas
+          </label>
+        </div>
+        <ng-container *ngIf="!form.value.allDay">
+          <div class="drawer-hours-row">
+            <span>Lun–Vie:</span>
+            <input type="time" formControlName="wdOpen" class="drawer-time">
+            <input type="time" formControlName="wdClose" class="drawer-time">
+          </div>
+          <div class="drawer-hours-row">
+            <span>Sábado:</span>
+            <input type="time" formControlName="satOpen" class="drawer-time">
+            <input type="time" formControlName="satClose" class="drawer-time">
+          </div>
+          <div class="drawer-hours-row">
+            <span>Domingo:</span>
+            <input type="time" formControlName="sunOpen" class="drawer-time">
+            <input type="time" formControlName="sunClose" class="drawer-time">
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div class="drawer-footer">
+      <button *ngIf="currentStep < 3" class="btn-primary" style="width:100%" (click)="nextStep()">Siguiente →</button>
+      <button *ngIf="currentStep === 3" class="btn-primary" style="width:100%" (click)="onSave()" [disabled]="form.invalid">Registrar negocio →</button>
+      <button *ngIf="currentStep > 1" class="btn-secondary" style="width:100%;margin-top:8px" (click)="prevStep()">← Atrás</button>
+    </div>
+  </ng-container>
+
+</div>
