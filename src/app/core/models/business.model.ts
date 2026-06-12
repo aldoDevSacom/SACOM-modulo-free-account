@@ -1,3 +1,5 @@
+export type BusinessStatus = 'in_progress' | 'published' | 'unpublished';
+
 export interface BusinessHours {
   open: string;
   close: string;
@@ -22,9 +24,12 @@ export interface BusinessHoursSchedule {
   sunday: BusinessHours | null;
 }
 
+export type BusinessDraft = Omit<Business, 'id' | 'userId' | 'status' | 'draft' | 'createdAt'>;
+
 export interface Business {
   id: string;
   userId: string;
+  status: BusinessStatus;
   businessName: string;
   contactName: string;
   contactEmail: string;
@@ -37,4 +42,7 @@ export interface Business {
   logoUrl: string;
   address: BusinessAddress;
   hours: BusinessHoursSchedule;
+  createdAt: string;
+  /** Borrador de edición para negocios publicados (Guardar avance sin afectar versión pública) */
+  draft?: BusinessDraft | null;
 }

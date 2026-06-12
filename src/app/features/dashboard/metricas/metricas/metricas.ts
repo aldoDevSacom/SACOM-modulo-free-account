@@ -24,12 +24,13 @@ export class Metricas implements OnInit {
 
   get userName(): string { return this.auth.currentUser()?.contactName ?? ''; }
 
+  get publishedCount(): number { return this.businessService.publishedCount(); }
+
   get ctr(): string {
     if (!this.totalImpressions) return '0%';
     return ((this.totalClicks / this.totalImpressions) * 100).toFixed(1) + '%';
   }
 
-  // Badges calculados comparando primera vs segunda mitad de los 30 días
   get clicksTrend(): string { return this.calcTrend('clicks').label; }
   get clicksTrendType(): 'up' | 'down' | 'neutral' { return this.calcTrend('clicks').type; }
   get impressionsTrend(): string { return this.calcTrend('impressions').label; }
@@ -37,7 +38,7 @@ export class Metricas implements OnInit {
 
   private calcTrend(field: 'clicks' | 'impressions'): { label: string; type: 'up' | 'down' | 'neutral' } {
     if (!this.chartData.length) return { label: '', type: 'neutral' };
-    const half = Math.floor(this.chartData.length / 2);
+    const half  = Math.floor(this.chartData.length / 2);
     const first  = this.chartData.slice(0, half).reduce((s, d) => s + d[field], 0);
     const second = this.chartData.slice(half).reduce((s, d) => s + d[field], 0);
     if (!first) return { label: '', type: 'neutral' };
@@ -79,6 +80,21 @@ export class Metricas implements OnInit {
   }
 
   closeDrawer(): void { this.drawerOpen = false; }
-  onDrawerSaved(_biz: Business): void { this.closeDrawer(); this.loadData(); }
-  onDrawerDeleted(_id: string): void { this.closeDrawer(); this.loadData(); }
+
+  onDrawerSaved(_biz: Business): void {
+    this.closeDrawer();
+    this.loadData();
+  }
+
+  onDrawerDeleted(_id: string): void {
+    this.closeDrawer();
+    this.loadData();
+  }
+
+  /** Cuando cambia el status sin cerrar el drawer (unpublish/publish desde detalle) */
+  onStatusChanged(biz: Business): void {
+    // Actualizar el negocio seleccionado en memoria para reflejar el nuevo status
+    this.selectedBusiness = this.businessService.getBusinessById(biz.id) ?? biz;
+    this.loadData();
+  }
 }

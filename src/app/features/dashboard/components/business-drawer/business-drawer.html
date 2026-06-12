@@ -2,31 +2,58 @@
 
 <div class="drawer-panel" [class.drawer-panel--closing]="closing" role="dialog" aria-modal="true" aria-label="Gestión de negocio">
 
-  <!-- MODO: DETAIL -->
-  <ng-container *ngIf="internalMode === 'detail' && business">
+  <!-- Toast de feedback -->
+  <div class="drawer-toast" *ngIf="toastMessage" [class.drawer-toast--success]="toastType==='success'" [class.drawer-toast--error]="toastType==='error'" [class.drawer-toast--warning]="toastType==='warning'">
+    {{ toastMessage }}
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div class="drawer-confirm" *ngIf="confirmAction">
+    <p class="drawer-confirm__msg">{{ confirmMessage }}</p>
+    <div class="drawer-confirm__actions">
+      <button class="btn-primary" (click)="confirmDo()">Confirmar</button>
+      <button class="btn-secondary" (click)="cancelConfirm()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ MODO: DETAIL ══════════════════════ -->
+  <ng-container *ngIf="internalMode === 'detail' && business && !confirmAction">
     <div class="drawer-header">
       <span class="drawer-title">Detalle del negocio</span>
       <button class="drawer-close" aria-label="Cerrar" (click)="requestClose()">
         <ng-icon name="heroXMark" size="16"></ng-icon>
       </button>
     </div>
+
     <div class="drawer-body">
+      <!-- Hero -->
       <div class="drawer-biz-hero">
         <div class="drawer-biz-icon">
           <ng-icon name="heroBuildingStorefront" size="26"></ng-icon>
         </div>
-        <div>
+        <div class="drawer-biz-hero__info">
           <div class="drawer-biz-name">{{ business.businessName }}</div>
-          <div class="drawer-biz-cat">{{ business.category }} · {{ business.address.colony }}</div>
+          <div class="drawer-biz-cat">{{ business.category }}{{ business.address.colony ? ' · ' + business.address.colony : '' }}</div>
+          <span class="drawer-status-badge" [ngClass]="statusClass">{{ statusLabel }}</span>
         </div>
       </div>
-      <div class="drawer-kpis">
+
+      <!-- Aviso de borrador pendiente -->
+      <div class="drawer-draft-notice" *ngIf="hasDraft">
+        <ng-icon name="heroExclamationTriangle" size="14"></ng-icon>
+        Tienes cambios guardados sin publicar. Edita y selecciona <strong>Finalizar</strong> para publicarlos.
+      </div>
+
+      <!-- KPIs (solo para publicados) -->
+      <div class="drawer-kpis" *ngIf="business.status === 'published'">
         <div class="drawer-kpi"><div class="drawer-kpi__value">{{ totalClicks | number }}</div><div class="drawer-kpi__label">Clics</div></div>
         <div class="drawer-kpi"><div class="drawer-kpi__value">{{ totalImpressions | number }}</div><div class="drawer-kpi__label">Impresiones</div></div>
         <div class="drawer-kpi"><div class="drawer-kpi__value">{{ ctr }}</div><div class="drawer-kpi__label">CTR</div></div>
       </div>
+
+      <!-- Info básica -->
       <div class="drawer-info-grid">
-        <div class="drawer-info-item">
+        <div class="drawer-info-item" *ngIf="business.publicPhone">
           <div class="drawer-info-label">Teléfono</div>
           <div class="drawer-info-value">{{ business.publicPhone }}</div>
         </div>
@@ -34,18 +61,18 @@
           <div class="drawer-info-label">Sitio web</div>
           <div class="drawer-info-value">{{ business.website }}</div>
         </div>
-        <div class="drawer-info-item">
+        <div class="drawer-info-item" *ngIf="business.address.fullAddress">
           <div class="drawer-info-label">Dirección</div>
           <div class="drawer-info-value">{{ business.address.fullAddress }}</div>
         </div>
-        <div class="drawer-info-item">
+        <div class="drawer-info-item" *ngIf="business.hours">
           <div class="drawer-info-label">Horario</div>
           <div class="drawer-info-value" *ngIf="business.hours.allDay">24 horas</div>
           <div class="drawer-info-value" *ngIf="!business.hours.allDay && business.hours.weekdays">
             Lun–Vie {{ business.hours.weekdays.open }}–{{ business.hours.weekdays.close }}
           </div>
         </div>
-        <div class="drawer-info-item">
+        <div class="drawer-info-item" *ngIf="business.products">
           <div class="drawer-info-label">Productos</div>
           <div class="drawer-tags">
             <span class="drawer-tag" *ngFor="let p of business.products.split(',').slice(0,4)">{{ p.trim() }}</span>
@@ -53,18 +80,48 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer condicional por estado -->
     <div class="drawer-footer">
-      <button class="btn-primary btn-icon-label" style="width:100%" (click)="switchToEdit()">
-        <ng-icon name="heroPencilSquare" size="16"></ng-icon> Editar información
-      </button>
-      <button class="btn-danger btn-icon-label" style="width:100%;margin-top:8px" (click)="onDelete()">
-        <ng-icon name="heroTrash" size="16"></ng-icon> Eliminar negocio
-      </button>
+
+      <!-- EN PROGRESO: Continuar edición + Eliminar -->
+      <ng-container *ngIf="business.status === 'in_progress'">
+        <button class="btn-primary btn-icon-label" style="width:100%" (click)="switchToEdit()">
+          <ng-icon name="heroPencilSquare" size="16"></ng-icon> Continuar edición
+        </button>
+        <button class="btn-danger btn-icon-label" style="width:100%;margin-top:8px" (click)="requestDelete()">
+          <ng-icon name="heroTrash" size="16"></ng-icon> Eliminar negocio
+        </button>
+      </ng-container>
+
+      <!-- PUBLICADO: Editar + Ver en portal + Cambiar a No publicado -->
+      <ng-container *ngIf="business.status === 'published'">
+        <button class="btn-primary btn-icon-label" style="width:100%" (click)="switchToEdit()">
+          <ng-icon name="heroPencilSquare" size="16"></ng-icon> Editar información
+        </button>
+        <button class="btn-secondary btn-icon-label" style="width:100%;margin-top:8px" (click)="requestUnpublish()">
+          <ng-icon name="heroEyeSlash" size="16"></ng-icon> Cambiar a No publicado
+        </button>
+      </ng-container>
+
+      <!-- NO PUBLICADO: Editar + Publicar + Eliminar -->
+      <ng-container *ngIf="business.status === 'unpublished'">
+        <button class="btn-primary btn-icon-label" style="width:100%" (click)="switchToEdit()">
+          <ng-icon name="heroPencilSquare" size="16"></ng-icon> Editar información
+        </button>
+        <button class="btn-secondary btn-icon-label" style="width:100%;margin-top:8px" (click)="requestPublish()">
+          <ng-icon name="heroArrowUpTray" size="16"></ng-icon> Publicar negocio
+        </button>
+        <button class="btn-danger btn-icon-label" style="width:100%;margin-top:8px" (click)="requestDelete()">
+          <ng-icon name="heroTrash" size="16"></ng-icon> Eliminar negocio
+        </button>
+      </ng-container>
+
     </div>
   </ng-container>
 
-  <!-- MODO: EDIT -->
-  <ng-container *ngIf="internalMode === 'edit' && form">
+  <!-- ══════════════════════ MODO: EDIT ══════════════════════ -->
+  <ng-container *ngIf="internalMode === 'edit' && form && !confirmAction">
     <div class="drawer-header">
       <div style="display:flex;align-items:center;gap:8px;">
         <button class="drawer-back" aria-label="Volver al detalle" (click)="switchToDetail()">
@@ -155,16 +212,21 @@
         <input id="logo-edit" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none" (change)="onLogoChange($event)">
       </div>
     </div>
+
+    <!-- Footer de edición: Guardar avance + Finalizar -->
     <div class="drawer-footer">
-      <button class="btn-primary btn-icon-label" style="width:100%" (click)="onSave()" [disabled]="form.invalid">
-        <ng-icon name="heroCheckCircle" size="16"></ng-icon> Guardar cambios
+      <button class="btn-primary btn-icon-label" style="width:100%" (click)="onFinalize()">
+        <ng-icon name="heroCheckCircle" size="16"></ng-icon> Finalizar
       </button>
-      <button class="btn-secondary" style="width:100%;margin-top:8px" (click)="switchToDetail()">Cancelar</button>
+      <button class="btn-secondary btn-icon-label" style="width:100%;margin-top:8px" (click)="onSaveProgress()" *ngIf="business">
+        <ng-icon name="heroArrowDownTray" size="16"></ng-icon> Guardar avance
+      </button>
+      <button class="btn-secondary" style="width:100%;margin-top:8px" (click)="switchToDetail()" *ngIf="business">Cancelar</button>
     </div>
   </ng-container>
 
-  <!-- MODO: ADD -->
-  <ng-container *ngIf="internalMode === 'add' && form">
+  <!-- ══════════════════════ MODO: ADD ══════════════════════ -->
+  <ng-container *ngIf="internalMode === 'add' && form && !confirmAction">
     <div class="drawer-header">
       <span class="drawer-title">Nuevo negocio</span>
       <button class="drawer-close" aria-label="Cerrar" (click)="requestClose()">
@@ -179,20 +241,38 @@
         <div class="drawer-step-line" [class.drawer-step-line--done]="currentStep > 2"></div>
         <div class="drawer-step" [class.drawer-step--active]="currentStep === 3">3</div>
       </div>
-      <div class="drawer-step-label">Paso {{ currentStep }} de 3 — {{ ['','Contacto','Negocio','Horarios y logo'][currentStep] }}</div>
+      <div class="drawer-step-label">Paso {{ currentStep }} de 3 — {{ ['','Contacto y giro','Negocio','Horarios y logo'][currentStep] }}</div>
 
       <ng-container *ngIf="currentStep === 1">
         <div class="drawer-form-group">
           <label>Nombre completo *</label>
           <input type="text" formControlName="contactName" class="drawer-input" placeholder="Tu nombre">
+          <span class="drawer-field-error" *ngIf="form.get('contactName')?.invalid && form.get('contactName')?.touched">Campo requerido</span>
         </div>
         <div class="drawer-form-group">
           <label>Correo *</label>
           <input type="email" formControlName="contactEmail" class="drawer-input" placeholder="correo@ejemplo.com">
+          <span class="drawer-field-error" *ngIf="form.get('contactEmail')?.invalid && form.get('contactEmail')?.touched">
+            {{ form.get('contactEmail')?.hasError('required') ? 'Campo requerido' : 'Correo no válido' }}
+          </span>
         </div>
         <div class="drawer-form-group">
           <label>Teléfono de contacto *</label>
           <input type="text" formControlName="contactPhone" maxlength="10" class="drawer-input" placeholder="10 dígitos">
+          <span class="drawer-field-error" *ngIf="form.get('contactPhone')?.invalid && form.get('contactPhone')?.touched">
+            {{ form.get('contactPhone')?.hasError('required') ? 'Campo requerido' : 'Debe tener 10 dígitos' }}
+          </span>
+        </div>
+        <div class="drawer-form-row">
+          <div class="drawer-form-group">
+            <label>Categoría o giro *</label>
+            <input type="text" formControlName="category" class="drawer-input" placeholder="Ej. Restaurantes">
+            <span class="drawer-field-error" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">Campo requerido</span>
+          </div>
+          <div class="drawer-form-group">
+            <label>Población / Municipio</label>
+            <input type="text" formControlName="city" class="drawer-input" placeholder="Ej. Ciudad de México">
+          </div>
         </div>
       </ng-container>
 
@@ -200,23 +280,26 @@
         <div class="drawer-form-group">
           <label>Nombre comercial *</label>
           <input type="text" formControlName="businessName" class="drawer-input" placeholder="Nombre de tu negocio">
+          <span class="drawer-field-error" *ngIf="form.get('businessName')?.invalid && form.get('businessName')?.touched">Campo requerido</span>
         </div>
-        <div class="drawer-form-row">
-          <div class="drawer-form-group">
-            <label>Giro *</label>
-            <input type="text" formControlName="category" class="drawer-input" placeholder="Ej. Restaurantes">
-          </div>
-          <div class="drawer-form-group">
-            <label>Tel. publicación *</label>
-            <input type="text" formControlName="publicPhone" maxlength="10" class="drawer-input" placeholder="10 dígitos">
-          </div>
+        <div class="drawer-form-group">
+          <label>Tel. publicación *</label>
+          <input type="text" formControlName="publicPhone" maxlength="10" class="drawer-input" placeholder="10 dígitos">
+          <span class="drawer-field-error" *ngIf="form.get('publicPhone')?.invalid && form.get('publicPhone')?.touched">
+            {{ form.get('publicPhone')?.hasError('required') ? 'Campo requerido' : 'Debe tener 10 dígitos' }}
+          </span>
         </div>
         <div class="drawer-form-group">
           <label>Sitio web</label>
           <input type="text" formControlName="website" class="drawer-input" placeholder="https://...">
         </div>
         <div class="drawer-form-group">
-          <label>Ubicación *</label>
+          <label>Dirección</label>
+          <input type="text" formControlName="fullAddress" class="drawer-input" placeholder="Calle, número, colonia, ciudad">
+          <span class="drawer-field-hint">También puedes marcar la ubicación en el mapa</span>
+        </div>
+        <div class="drawer-form-group">
+          <label>Ubicar en mapa</label>
           <google-map height="160px" width="100%" [center]="mapCenter" [zoom]="zoom" [options]="mapOptions" (mapClick)="onMapClick($event)" style="border-radius:10px;overflow:hidden;display:block;">
             <map-marker [position]="markerPosition" [options]="{draggable:true}" (mapDragend)="onMarkerDragEnd($event)"></map-marker>
           </google-map>
@@ -224,6 +307,7 @@
         <div class="drawer-form-group">
           <label>Productos / servicios *</label>
           <textarea formControlName="products" rows="3" class="drawer-textarea" placeholder="Hasta 25 palabras separadas por comas"></textarea>
+          <span class="drawer-field-error" *ngIf="form.get('products')?.invalid && form.get('products')?.touched">Campo requerido</span>
         </div>
       </ng-container>
 

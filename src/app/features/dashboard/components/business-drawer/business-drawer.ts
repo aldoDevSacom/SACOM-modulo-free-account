@@ -1,8 +1,12 @@
 import { Component, EventEmitter, Input, NgZone, OnChanges, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Business, BusinessAddress } from '../../../../core/models/business.model';
-import { BusinessMockService } from '../../../../core/services/business.mock.service';
+import { Business, BusinessAddress, BusinessStatus } from '../../../../core/models/business.model';
+import { BusinessMockService, StatusTransitionResult } from '../../../../core/services/business.mock.service';
 import { Metrics } from '../../../../core/models/metrics.model';
+
+export type DrawerMode = 'detail' | 'edit' | 'add';
+
+type ConfirmAction = 'unpublish' | 'publish' | 'delete' | null;
 
 @Component({
   selector: 'app-business-drawer',
@@ -11,45 +15,62 @@ import { Metrics } from '../../../../core/models/metrics.model';
   styleUrl: './business-drawer.scss'
 })
 export class BusinessDrawer implements OnChanges {
-  @Input() mode: 'detail' | 'edit' | 'add' = 'detail';
+  @Input() mode: DrawerMode = 'detail';
   @Input() business: Business | null = null;
   @Input() metrics: Metrics | null = null;
-  @Output() closed = new EventEmitter<void>();
-  @Output() saved = new EventEmitter<Business>();
-  @Output() deleted = new EventEmitter<string>();
+  @Output() closed   = new EventEmitter<void>();
+  @Output() saved    = new EventEmitter<Business>();
+  @Output() deleted  = new EventEmitter<string>();
+  @Output() statusChanged = new EventEmitter<Business>();
 
-  internalMode: 'detail' | 'edit' | 'add' = 'detail';
+  internalMode: DrawerMode = 'detail';
   form!: FormGroup;
   logoPreview = '';
   currentStep = 1;
-  closing = false; // controla animación de cierre
+  closing = false;
 
+  // Confirmaciones
+  confirmAction: ConfirmAction = null;
+  confirmMessage = '';
+
+  // Feedback de acciones
+  toastMessage = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
+  private toastTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // Mapa
   mapCenter: google.maps.LatLngLiteral = { lat: 19.4195, lng: -99.1674 };
   markerPosition: google.maps.LatLngLiteral = { lat: 19.4195, lng: -99.1674 };
   zoom = 14;
   mapOptions: google.maps.MapOptions = { clickableIcons: false };
 
-  // Campos requeridos por paso para validación
   private readonly stepFields: Record<number, string[]> = {
-    1: ['contactName', 'contactEmail', 'contactPhone'],
-    2: ['businessName', 'category', 'publicPhone', 'products'],
+    1: ['contactName', 'contactEmail', 'contactPhone', 'category'],
+    2: ['businessName', 'publicPhone', 'products'],
     3: []
   };
 
+  // ─── Getters ──────────────────────────────────────────────────────────────
+
+  get currentStatus(): BusinessStatus | null {
+    return this.business?.status ?? null;
+  }
+
+  get hasDraft(): boolean {
+    return !!this.business?.draft;
+  }
+
   get totalClicks(): number {
-    if (!this.metrics) return 0;
-    return this.metrics.last30Days.reduce((s, d) => s + d.clicks, 0);
+    return this.metrics?.last30Days.reduce((s, d) => s + d.clicks, 0) ?? 0;
   }
 
   get totalImpressions(): number {
-    if (!this.metrics) return 0;
-    return this.metrics.last30Days.reduce((s, d) => s + d.impressions, 0);
+    return this.metrics?.last30Days.reduce((s, d) => s + d.impressions, 0) ?? 0;
   }
 
   get ctr(): string {
     const t = this.totalImpressions;
-    if (!t) return '0%';
-    return ((this.totalClicks / t) * 100).toFixed(1) + '%';
+    return t ? ((this.totalClicks / t) * 100).toFixed(1) + '%' : '0%';
   }
 
   get currentStepInvalid(): boolean {
@@ -57,16 +78,39 @@ export class BusinessDrawer implements OnChanges {
     return this.stepFields[this.currentStep]?.some(f => this.form.get(f)?.invalid) ?? false;
   }
 
-  constructor(private fb: FormBuilder, private businessService: BusinessMockService, private ngZone: NgZone) {}
+  get statusLabel(): string {
+    const map: Record<BusinessStatus, string> = {
+      published: 'Publicado', unpublished: 'No publicado', in_progress: 'En progreso'
+    };
+    return this.currentStatus ? map[this.currentStatus] : '';
+  }
+
+  get statusClass(): string {
+    const map: Record<BusinessStatus, string> = {
+      published: 'status--published', unpublished: 'status--unpublished', in_progress: 'status--progress'
+    };
+    return this.currentStatus ? map[this.currentStatus] : '';
+  }
+
+  constructor(
+    private fb: FormBuilder,
+    private businessService: BusinessMockService,
+    private ngZone: NgZone
+  ) {}
 
   ngOnChanges(): void {
     this.internalMode = this.mode;
     this.closing = false;
+    this.confirmAction = null;
+    this.toastMessage = '';
+
     if (this.mode === 'edit' && this.business) {
       this.buildForm();
-      this.logoPreview = this.business.logoUrl;
-      this.mapCenter = { lat: this.business.address.lat, lng: this.business.address.lng };
-      this.markerPosition = { lat: this.business.address.lat, lng: this.business.address.lng };
+      // Si hay draft, editar desde el draft para no perder avance
+      const src = this.business.draft ?? this.business;
+      this.logoPreview = src.logoUrl;
+      this.mapCenter = { lat: src.address.lat, lng: src.address.lng };
+      this.markerPosition = { ...this.mapCenter };
     }
     if (this.mode === 'add') {
       this.buildForm();
@@ -76,52 +120,224 @@ export class BusinessDrawer implements OnChanges {
   }
 
   private buildForm(): void {
-    const b = this.business;
+    // Para negocios publicados, editar desde draft si existe
+    const b = (this.business?.draft && this.internalMode === 'edit')
+      ? { ...this.business, ...this.business.draft }
+      : this.business;
+
     this.form = this.fb.group({
-      contactName:   [b?.contactName       ?? '', Validators.required],
-      contactEmail:  [b?.contactEmail      ?? '', [Validators.required, Validators.email]],
-      contactPhone:  [b?.contactPhone      ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      businessName:  [b?.businessName      ?? '', Validators.required],
-      category:      [b?.category          ?? '', Validators.required],
-      website:       [b?.website           ?? ''],
-      publicPhone:   [b?.publicPhone       ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      products:      [b?.products          ?? '', Validators.required],
-      fullAddress:   [b?.address.fullAddress    ?? ''],
-      street:        [b?.address.street         ?? ''],
-      exteriorNumber:[b?.address.exteriorNumber ?? ''],
-      colony:        [b?.address.colony         ?? ''],
-      postalCode:    [b?.address.postalCode      ?? ''],
-      city:          [b?.address.city            ?? ''],
-      state:         [b?.address.state           ?? ''],
-      lat:           [b?.address.lat             ?? 19.4195],
-      lng:           [b?.address.lng             ?? -99.1674],
-      allDay:        [b?.hours.allDay            ?? false],
-      wdOpen:        [b?.hours.weekdays?.open    ?? ''],
-      wdClose:       [b?.hours.weekdays?.close   ?? ''],
-      satOpen:       [b?.hours.saturday?.open    ?? ''],
-      satClose:      [b?.hours.saturday?.close   ?? ''],
-      sunOpen:       [b?.hours.sunday?.open      ?? ''],
-      sunClose:      [b?.hours.sunday?.close     ?? '']
+      contactName:    [b?.contactName           ?? '', Validators.required],
+      contactEmail:   [b?.contactEmail          ?? '', [Validators.required, Validators.email]],
+      contactPhone:   [b?.contactPhone          ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      businessName:   [b?.businessName          ?? '', Validators.required],
+      category:       [b?.category              ?? '', Validators.required],
+      website:        [b?.website               ?? ''],
+      publicPhone:    [b?.publicPhone           ?? '', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      products:       [b?.products              ?? '', Validators.required],
+      fullAddress:    [b?.address?.fullAddress  ?? ''],
+      street:         [b?.address?.street       ?? ''],
+      exteriorNumber: [b?.address?.exteriorNumber ?? ''],
+      colony:         [b?.address?.colony       ?? ''],
+      postalCode:     [b?.address?.postalCode   ?? ''],
+      city:           [b?.address?.city         ?? ''],
+      state:          [b?.address?.state        ?? ''],
+      lat:            [b?.address?.lat          ?? 19.4195],
+      lng:            [b?.address?.lng          ?? -99.1674],
+      allDay:         [b?.hours?.allDay         ?? false],
+      wdOpen:         [b?.hours?.weekdays?.open ?? ''],
+      wdClose:        [b?.hours?.weekdays?.close ?? ''],
+      satOpen:        [b?.hours?.saturday?.open ?? ''],
+      satClose:       [b?.hours?.saturday?.close ?? ''],
+      sunOpen:        [b?.hours?.sunday?.open   ?? ''],
+      sunClose:       [b?.hours?.sunday?.close  ?? '']
     });
   }
 
-  // Cierre con animación
+  // ─── Cierre con animación ─────────────────────────────────────────────────
+
   requestClose(): void {
+    if (this.confirmAction) { this.confirmAction = null; return; }
     this.closing = true;
     setTimeout(() => this.closed.emit(), 220);
   }
+
+  // ─── Navegación de modo ───────────────────────────────────────────────────
 
   switchToEdit(): void {
     this.internalMode = 'edit';
     this.buildForm();
     if (this.business) {
-      this.logoPreview = this.business.logoUrl;
-      this.mapCenter = { lat: this.business.address.lat, lng: this.business.address.lng };
+      const src = this.business.draft ?? this.business;
+      this.logoPreview = src.logoUrl;
+      this.mapCenter = { lat: src.address.lat, lng: src.address.lng };
       this.markerPosition = { ...this.mapCenter };
     }
   }
 
   switchToDetail(): void { this.internalMode = 'detail'; }
+
+  // ─── Guardar avance ───────────────────────────────────────────────────────
+
+  onSaveProgress(): void {
+    if (!this.business || !this.form) return;
+    const data = this.buildDataFromForm();
+    this.businessService.saveProgress(this.business.id, data).subscribe(b => {
+      this.showToast('Tu avance fue guardado. Puedes continuar editando desde Mis Negocios.', 'success');
+      this.statusChanged.emit(b);
+    });
+  }
+
+  // ─── Finalizar ────────────────────────────────────────────────────────────
+
+  onFinalize(): void {
+    if (!this.business || !this.form) return;
+    // Primero guardar los datos actuales del form
+    const data = this.buildDataFromForm();
+    this.businessService.saveProgress(this.business.id, data).subscribe(() => {
+      this.businessService.finalize(this.business!.id).subscribe((result: StatusTransitionResult) => {
+        if (result.success) {
+          this.showToast(result.message, result.status === 'unpublished' ? 'warning' : 'success');
+          // Recargar negocio actualizado
+          const updated = this.businessService.getBusinessById(this.business!.id);
+          if (updated) {
+            this.saved.emit(updated);
+          }
+        } else {
+          this.showToast(result.message, 'error');
+        }
+      });
+    });
+  }
+
+  // ─── Acciones desde modo ADD ──────────────────────────────────────────────
+
+  onSave(): void {
+    if (!this.form || this.form.invalid) return;
+    const v = this.form.value;
+    const data = this.buildDataFromForm();
+
+    if (this.internalMode === 'edit' && this.business) {
+      this.businessService.updateBusiness(this.business.id, data).subscribe(b => this.saved.emit(b));
+    } else {
+      this.businessService.addBusiness({
+        contactName: v.contactName, contactEmail: v.contactEmail, contactPhone: v.contactPhone,
+        businessName: v.businessName, category: v.category, website: v.website,
+        publicPhone: v.publicPhone, products: v.products, logoUrl: this.logoPreview,
+        categoryCode: this.business?.categoryCode ?? 0,
+        address: {
+          fullAddress: v.fullAddress, street: v.street, exteriorNumber: v.exteriorNumber,
+          colony: v.colony, postalCode: v.postalCode, city: v.city, state: v.state,
+          lat: v.lat, lng: v.lng
+        },
+        hours: {
+          allDay: v.allDay,
+          weekdays: v.allDay ? null : { open: v.wdOpen, close: v.wdClose },
+          saturday: v.allDay ? null : { open: v.satOpen, close: v.satClose },
+          sunday:   v.allDay ? null : { open: v.sunOpen, close: v.sunClose }
+        }
+      }).subscribe(b => this.saved.emit(b));
+    }
+  }
+
+  private buildDataFromForm() {
+    const v = this.form.value;
+    return {
+      contactName: v.contactName, contactEmail: v.contactEmail, contactPhone: v.contactPhone,
+      businessName: v.businessName, category: v.category, website: v.website,
+      publicPhone: v.publicPhone, products: v.products, logoUrl: this.logoPreview,
+      categoryCode: this.business?.categoryCode ?? 0,
+      address: {
+        fullAddress: v.fullAddress, street: v.street, exteriorNumber: v.exteriorNumber,
+        colony: v.colony, postalCode: v.postalCode, city: v.city, state: v.state,
+        lat: v.lat, lng: v.lng
+      },
+      hours: {
+        allDay: v.allDay,
+        weekdays: v.allDay ? null : { open: v.wdOpen, close: v.wdClose },
+        saturday: v.allDay ? null : { open: v.satOpen, close: v.satClose },
+        sunday:   v.allDay ? null : { open: v.sunOpen, close: v.sunClose }
+      }
+    };
+  }
+
+  // ─── Confirmaciones ───────────────────────────────────────────────────────
+
+  requestUnpublish(): void {
+    this.confirmAction = 'unpublish';
+    this.confirmMessage = 'Este negocio dejará de estar visible públicamente y liberará un espacio de publicación gratuita. ¿Deseas continuar?';
+  }
+
+  requestPublish(): void {
+    if (!this.businessService.hasPublishSlot()) {
+      this.showToast('No es posible publicar porque ya tienes 3 negocios publicados. Cambia uno a No publicado primero.', 'error');
+      return;
+    }
+    this.confirmAction = 'publish';
+    this.confirmMessage = 'Este negocio será visible en seccionamarilla.com y ocupará uno de tus espacios gratuitos disponibles. ¿Deseas continuar?';
+  }
+
+  requestDelete(): void {
+    if (this.business?.status === 'published') {
+      this.showToast('No puedes eliminar un negocio publicado. Primero cámbialo a No publicado.', 'error');
+      return;
+    }
+    this.confirmAction = 'delete';
+    this.confirmMessage = 'Este negocio será eliminado de Mis Negocios y no podrás recuperarlo desde esta sección. ¿Deseas continuar?';
+  }
+
+  confirmDo(): void {
+    if (!this.business) return;
+    switch (this.confirmAction) {
+      case 'unpublish':
+        this.businessService.unpublish(this.business.id).subscribe(b => {
+          this.confirmAction = null;
+          this.showToast('Tu negocio ahora está No publicado y ya no será visible en seccionamarilla.com.', 'success');
+          this.statusChanged.emit(b);
+          // Refrescar business local
+          const updated = this.businessService.getBusinessById(b.id);
+          if (updated) (this as any).business = updated;
+        });
+        break;
+      case 'publish':
+        this.businessService.publish(this.business.id).subscribe((result: StatusTransitionResult) => {
+          this.confirmAction = null;
+          if (result.success) {
+            this.showToast(result.message, 'success');
+            const updated = this.businessService.getBusinessById(this.business!.id);
+            if (updated) {
+              (this as any).business = updated;
+              this.statusChanged.emit(updated);
+            }
+          } else {
+            this.showToast(result.message, 'error');
+          }
+        });
+        break;
+      case 'delete':
+        this.businessService.softDelete(this.business.id).subscribe((result: StatusTransitionResult) => {
+          this.confirmAction = null;
+          if (result.success) {
+            this.deleted.emit(this.business!.id);
+          } else {
+            this.showToast(result.message, 'error');
+          }
+        });
+        break;
+    }
+  }
+
+  cancelConfirm(): void { this.confirmAction = null; }
+
+  // ─── Toast ────────────────────────────────────────────────────────────────
+
+  private showToast(message: string, type: 'success' | 'error' | 'warning'): void {
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastMessage = message;
+    this.toastType = type;
+    this.toastTimer = setTimeout(() => { this.toastMessage = ''; }, 4000);
+  }
+
+  // ─── Logo y mapa ──────────────────────────────────────────────────────────
 
   onLogoChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -136,8 +352,7 @@ export class BusinessDrawer implements OnChanges {
 
   onMapClick(event: google.maps.MapMouseEvent): void {
     if (!event.latLng) return;
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
+    const lat = event.latLng.lat(), lng = event.latLng.lng();
     this.markerPosition = { lat, lng };
     this.geocode(lat, lng);
   }
@@ -155,22 +370,21 @@ export class BusinessDrawer implements OnChanges {
         const r = results[0];
         const get = (type: string) => r.address_components.find(c => c.types.includes(type))?.long_name ?? '';
         this.onAddressChange({
-          fullAddress: r.formatted_address,
-          street: get('route'),
+          fullAddress: r.formatted_address, street: get('route'),
           exteriorNumber: get('street_number'),
           colony: get('sublocality_level_1') || get('neighborhood'),
           postalCode: get('postal_code'),
           city: get('locality') || get('administrative_area_level_1'),
-          state: get('administrative_area_level_1'),
-          lat, lng
+          state: get('administrative_area_level_1'), lat, lng
         });
       });
     });
   }
 
+  // ─── Pasos (modo ADD) ─────────────────────────────────────────────────────
+
   nextStep(): void {
     if (this.currentStepInvalid) {
-      // Marcar campos del paso actual como touched para mostrar errores
       this.stepFields[this.currentStep]?.forEach(f => this.form.get(f)?.markAsTouched());
       return;
     }
@@ -178,39 +392,4 @@ export class BusinessDrawer implements OnChanges {
   }
 
   prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
-
-  onSave(): void {
-    if (!this.form || this.form.invalid) return;
-    const v = this.form.value;
-    const data: Omit<Business, 'id' | 'userId'> = {
-      contactName: v.contactName, contactEmail: v.contactEmail, contactPhone: v.contactPhone,
-      businessName: v.businessName, category: v.category, website: v.website,
-      publicPhone: v.publicPhone, products: v.products, logoUrl: this.logoPreview,
-      categoryCode: this.business?.categoryCode ?? 0,
-      address: {
-        fullAddress: v.fullAddress, street: v.street, exteriorNumber: v.exteriorNumber,
-        colony: v.colony, postalCode: v.postalCode, city: v.city, state: v.state,
-        lat: v.lat, lng: v.lng
-      },
-      hours: {
-        allDay: v.allDay,
-        weekdays: v.allDay ? null : { open: v.wdOpen, close: v.wdClose },
-        saturday: v.allDay ? null : { open: v.satOpen, close: v.satClose },
-        sunday:   v.allDay ? null : { open: v.sunOpen, close: v.sunClose }
-      }
-    };
-    if (this.internalMode === 'edit' && this.business) {
-      this.businessService.updateBusiness(this.business.id, data).subscribe(b => this.saved.emit(b));
-    } else {
-      this.businessService.addBusiness(data).subscribe(b => this.saved.emit(b));
-    }
-  }
-
-  onDelete(): void {
-    if (!this.business) return;
-    if (!confirm(`¿Eliminar "${this.business.businessName}"? Esta acción no se puede deshacer.`)) return;
-    this.businessService.deleteBusiness(this.business.id).subscribe(() => {
-      this.deleted.emit(this.business!.id);
-    });
-  }
 }

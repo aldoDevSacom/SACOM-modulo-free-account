@@ -4,6 +4,19 @@
     <div class="biz-list-card__count">{{ businesses.length }}</div>
   </div>
 
+  <!-- Contador de publicados -->
+  <div class="biz-list-card__pub-counter" [class.biz-list-card__pub-counter--full]="publishedCount >= MAX_PUBLISHED">
+    <div class="biz-list-card__pub-bar">
+      <div class="biz-list-card__pub-fill"
+           [class.biz-list-card__pub-fill--full]="publishedCount >= MAX_PUBLISHED"
+           [style.width.%]="(publishedCount / MAX_PUBLISHED) * 100"></div>
+    </div>
+    <span class="biz-list-card__pub-label">
+      <strong>{{ publishedCount }}</strong> de {{ MAX_PUBLISHED }} publicados
+      <ng-container *ngIf="publishedCount >= MAX_PUBLISHED"> · límite alcanzado</ng-container>
+    </span>
+  </div>
+
   <div class="biz-list-card__rows">
     <div
       *ngFor="let biz of businesses"
@@ -14,12 +27,11 @@
       </div>
       <div class="biz-list-card__info">
         <div class="biz-list-card__name">{{ biz.businessName }}</div>
-        <div class="biz-list-card__cat">{{ biz.category }} · {{ biz.address.colony }}</div>
+        <div class="biz-list-card__cat">{{ biz.category }}{{ biz.address.colony ? ' · ' + biz.address.colony : '' }}</div>
       </div>
-      <div class="biz-list-card__meta">
-        <div class="biz-list-card__clicks">{{ avgClicks | number }}</div>
-        <div class="biz-list-card__clicks-label">clics</div>
-      </div>
+      <span class="biz-list-card__status" [ngClass]="statusClass(biz.status)">
+        {{ statusLabel(biz.status) }}
+      </span>
       <ng-icon name="heroChevronRight" size="16" class="biz-list-card__arrow"></ng-icon>
     </div>
 

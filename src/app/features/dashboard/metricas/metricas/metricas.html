@@ -58,6 +58,7 @@
     <app-business-list-card
       [businesses]="businesses"
       [metrics]="metrics"
+      [publishedCount]="publishedCount"
       (businessSelected)="openDrawerDetail($event)"
       (addRequested)="openDrawerAdd()">
     </app-business-list-card>
@@ -86,5 +87,6 @@
   [metrics]="metrics"
   (closed)="closeDrawer()"
   (saved)="onDrawerSaved($event)"
-  (deleted)="onDrawerDeleted($event)">
+  (deleted)="onDrawerDeleted($event)"
+  (statusChanged)="onStatusChanged($event)">
 </app-business-drawer>

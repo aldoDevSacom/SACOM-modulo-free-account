@@ -3,6 +3,7 @@
     {
       "id": "biz-001",
       "userId": "usr-001",
+      "status": "published",
       "businessName": "Taquería El Buen Sabor",
       "contactName": "Juan Pérez García",
       "contactEmail": "juan@buensabor.com",
@@ -13,6 +14,8 @@
       "publicPhone": "5559876543",
       "products": "tacos, quesadillas, tortas, burritos, sopes, tlayudas",
       "logoUrl": "",
+      "createdAt": "2026-05-01T10:00:00.000Z",
+      "draft": null,
       "address": {
         "fullAddress": "Av. Insurgentes Sur 123, Roma Norte, 06700 Ciudad de México, CDMX",
         "street": "Av. Insurgentes Sur",
@@ -34,6 +37,7 @@
     {
       "id": "biz-002",
       "userId": "usr-001",
+      "status": "published",
       "businessName": "Tech Solutions MX",
       "contactName": "Juan Pérez García",
       "contactEmail": "juan@techsolutions.mx",
@@ -44,6 +48,8 @@
       "publicPhone": "5554567890",
       "products": "desarrollo web, apps móviles, consultoría IT, soporte técnico",
       "logoUrl": "",
+      "createdAt": "2026-05-10T14:30:00.000Z",
+      "draft": null,
       "address": {
         "fullAddress": "Av. Presidente Masaryk 111, Polanco, 11560 Ciudad de México, CDMX",
         "street": "Av. Presidente Masaryk",
@@ -58,6 +64,74 @@
       "hours": {
         "allDay": false,
         "weekdays": { "open": "09:00", "close": "18:00" },
+        "saturday": null,
+        "sunday": null
+      }
+    },
+    {
+      "id": "biz-003",
+      "userId": "usr-001",
+      "status": "unpublished",
+      "businessName": "Florería Primavera",
+      "contactName": "Juan Pérez García",
+      "contactEmail": "juan@floreria.com",
+      "contactPhone": "5551234567",
+      "categoryCode": 5992,
+      "category": "Florería",
+      "website": "",
+      "publicPhone": "5557890123",
+      "products": "flores naturales, arreglos florales, coronas, bouquets",
+      "logoUrl": "",
+      "createdAt": "2026-06-01T09:00:00.000Z",
+      "draft": null,
+      "address": {
+        "fullAddress": "Calle Madero 45, Centro Histórico, 06000 Ciudad de México, CDMX",
+        "street": "Calle Madero",
+        "exteriorNumber": "45",
+        "colony": "Centro Histórico",
+        "postalCode": "06000",
+        "city": "Ciudad de México",
+        "state": "CDMX",
+        "lat": 19.4332,
+        "lng": -99.1346
+      },
+      "hours": {
+        "allDay": false,
+        "weekdays": { "open": "09:00", "close": "19:00" },
+        "saturday": { "open": "09:00", "close": "15:00" },
+        "sunday": null
+      }
+    },
+    {
+      "id": "biz-004",
+      "userId": "usr-001",
+      "status": "in_progress",
+      "businessName": "Gym FitLife",
+      "contactName": "Juan Pérez García",
+      "contactEmail": "juan@fitlife.com",
+      "contactPhone": "5551234567",
+      "categoryCode": 7991,
+      "category": "Gimnasio",
+      "website": "",
+      "publicPhone": "",
+      "products": "",
+      "logoUrl": "",
+      "createdAt": "2026-06-10T17:00:00.000Z",
+      "draft": null,
+      "address": {
+        "fullAddress": "",
+        "street": "",
+        "exteriorNumber": "",
+        "colony": "",
+        "postalCode": "",
+        "city": "",
+        "state": "",
+        "lat": 19.4195,
+        "lng": -99.1674
+      },
+      "hours": {
+        "allDay": false,
+        "weekdays": null,
         "saturday": null,
         "sunday": null
       }

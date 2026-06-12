@@ -13,14 +13,17 @@ import {
   heroArrowLeft,
   heroArrowRight,
   heroArrowUpTray,
+  heroArrowDownTray,
   heroCheckCircle,
   heroChevronRight,
   heroPlus,
   heroMapPin,
   heroCursorArrowRays,
   heroEye,
+  heroEyeSlash,
   heroArrowTrendingUp,
-  heroBriefcase
+  heroBriefcase,
+  heroExclamationTriangle
 } from '@ng-icons/heroicons/outline';
 import { Metricas } from './metricas/metricas';
 import { LineChart } from './line-chart/line-chart';
@@ -40,9 +43,10 @@ const routes: Routes = [{ path: '', component: Metricas }];
     BaseChartDirective,
     NgIconsModule.withIcons({
       heroBuildingStorefront, heroXMark, heroPencilSquare, heroTrash,
-      heroArrowLeft, heroArrowRight, heroArrowUpTray, heroCheckCircle,
-      heroChevronRight, heroPlus, heroMapPin,
-      heroCursorArrowRays, heroEye, heroArrowTrendingUp, heroBriefcase
+      heroArrowLeft, heroArrowRight, heroArrowUpTray, heroArrowDownTray,
+      heroCheckCircle, heroChevronRight, heroPlus, heroMapPin,
+      heroCursorArrowRays, heroEye, heroEyeSlash,
+      heroArrowTrendingUp, heroBriefcase, heroExclamationTriangle
     })
   ],
   providers: [provideCharts(withDefaultRegisterables())]

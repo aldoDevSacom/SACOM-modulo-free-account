@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Business } from '../../../../core/models/business.model';
+import { Business, BusinessStatus } from '../../../../core/models/business.model';
 import { Metrics } from '../../../../core/models/metrics.model';
 
 @Component({
@@ -11,14 +11,17 @@ import { Metrics } from '../../../../core/models/metrics.model';
 export class BusinessListCard {
   @Input() businesses: Business[] = [];
   @Input() metrics: Metrics | null = null;
+  @Input() publishedCount = 0;
   @Output() businessSelected = new EventEmitter<Business>();
   @Output() addRequested = new EventEmitter<void>();
 
-  // NOTE: metrics are aggregated across all businesses (mock service has no
-  // per-business breakdown), so we show the per-business average as an approximation.
-  get avgClicks(): number {
-    if (!this.metrics) return 0;
-    const total = this.metrics.last30Days.reduce((s, d) => s + d.clicks, 0);
-    return Math.round(total / (this.businesses.length || 1));
+  readonly MAX_PUBLISHED = 3;
+
+  statusLabel(status: BusinessStatus): string {
+    return { published: 'Publicado', unpublished: 'No publicado', in_progress: 'En progreso' }[status] ?? status;
+  }
+
+  statusClass(status: BusinessStatus): string {
+    return { published: 'status--published', unpublished: 'status--unpublished', in_progress: 'status--progress' }[status] ?? '';
   }
 }
