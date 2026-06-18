@@ -38,20 +38,17 @@ export class AuthMockService {
     return of(void 0);
   }
 
+  /** Mock OTP: en entorno real enviaría un código; aquí autentica directamente */
+  loginOtp(email: string): Observable<boolean> {
+    const user: User = { ...DEMO_USER, email };
+    sessionStorage.setItem(this.KEY, JSON.stringify(user));
+    this.currentUser.set(user);
+    return of(true);
+  }
+
+  /** @deprecated Mantener para compatibilidad con código existente */
   login(email: string, password: string): Observable<boolean> {
-    // Credenciales demo siempre disponibles
-    if (email === DEMO_USER.email && password === DEMO_USER.password) {
-      sessionStorage.setItem(this.KEY, JSON.stringify(DEMO_USER));
-      this.currentUser.set(DEMO_USER);
-      return of(true);
-    }
-    // Usuario creado en sesión actual
-    const user = this.load();
-    if (user && user.email === email && user.password === password) {
-      this.currentUser.set(user);
-      return of(true);
-    }
-    return of(false);
+    return this.loginOtp(email);
   }
 
   logout(): void {

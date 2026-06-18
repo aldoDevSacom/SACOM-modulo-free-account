@@ -11,11 +11,9 @@ import { AuthMockService, DEMO_USER } from '../../../core/services/auth.mock.ser
 })
 export class Login implements OnInit {
   form!: FormGroup;
-  errorMsg = '';
   loading = false;
 
   readonly demoEmail = DEMO_USER.email;
-  readonly demoPassword = DEMO_USER.password;
 
   constructor(
     private fb: FormBuilder,
@@ -25,29 +23,22 @@ export class Login implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
   get email() { return this.form.get('email')!; }
-  get password() { return this.form.get('password')!; }
 
   fillDemo(): void {
-    this.form.setValue({ email: DEMO_USER.email, password: DEMO_USER.password });
+    this.form.setValue({ email: DEMO_USER.email });
   }
 
   onSubmit(): void {
     if (this.form.invalid) return;
     this.loading = true;
-    this.errorMsg = '';
-    this.auth.login(this.email.value, this.password.value).subscribe(success => {
+    this.auth.loginOtp(this.email.value).subscribe(() => {
       this.loading = false;
-      if (success) {
-        this.router.navigate(['/dashboard/metricas']);
-      } else {
-        this.errorMsg = 'Correo o contraseña incorrectos.';
-      }
+      this.router.navigate(['/dashboard/metricas']);
     });
   }
 }

@@ -1,5 +1,4 @@
 <div class="login">
-
   <div class="login__card">
 
     <!-- Logo -->
@@ -42,19 +41,14 @@
         <span class="error-msg" *ngIf="email.touched && email.hasError('email')">Ingresa un correo válido</span>
       </div>
 
-      <div class="login__field">
-        <label for="password">Contraseña</label>
-        <input id="password" type="password" formControlName="password" class="login__input"
-          [class.login__input--error]="password.invalid && password.touched"
-          placeholder="••••••••">
-        <span class="error-msg" *ngIf="password.touched && password.hasError('required')">La contraseña es requerida</span>
-      </div>
-
-      <span class="error-msg login__error-global" *ngIf="errorMsg">{{ errorMsg }}</span>
+      <p class="login__otp-hint">
+        Te enviaremos un código de verificación a este correo.
+      </p>
 
       <button type="submit" class="login__btn" [disabled]="form.invalid || loading">
-        {{ loading ? 'Ingresando…' : 'Ingresar' }}
+        {{ loading ? 'Enviando…' : 'Verificar' }}
       </button>
+
     </form>
 
     <p class="login__register-link">
@@ -62,19 +56,16 @@
       <a href="https://www.seccionamarilla.com.mx/registra-tu-empresa" target="_blank" rel="noopener">Regístrate aquí</a>
     </p>
 
-    <!-- Demo credentials -->
+    <!-- Demo: acceso directo sin OTP real -->
     <div class="login__demo">
       <div class="login__demo-label">Acceso de prueba</div>
       <div class="login__demo-creds">
         <span>{{ demoEmail }}</span>
-        <span class="login__demo-sep">·</span>
-        <span>{{ demoPassword }}</span>
       </div>
       <button type="button" class="login__demo-btn" (click)="fillDemo()">
-        Usar credenciales demo
+        Usar correo demo
       </button>
     </div>
 
   </div>
-
 </div>
